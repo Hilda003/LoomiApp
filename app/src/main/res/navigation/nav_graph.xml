@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/materialFragment">
+
+    <fragment
+        android:id="@+id/materialFragment"
+        android:name="com.example.loomi.ui.material.MaterialFragment"
+        android:label="Material">
+        <action
+            android:id="@+id/action_materialFragment_to_contentFragment"
+            app:destination="@id/contentFragment" />
+
+    </fragment>
+    <fragment
+        android:id="@+id/contentFragment"
+        android:name="com.example.loomi.ui.content.ContentFragment"
+        android:label="Content" >
+        <argument
+            android:name="SECTION_DATA"
+            app:argType="com.example.loomi.model.Section" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/explanationFragment"
+        android:name="com.example.loomi.ui.content.ExplanationFragment"
+        android:label="Explanation">
+        <argument
+            android:name="materialTitle"
+            app:argType="string" />
+    </fragment>
+
+</navigation>

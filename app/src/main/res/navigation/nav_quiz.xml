@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_quiz"
+    app:startDestination="@id/explanationFragment">
+
+    <fragment
+        android:id="@+id/explanationFragment"
+        android:name="com.example.loomi.ui.material.ExplanationFragment"
+        android:label="Explanation">
+        <action android:id="@+id/action_explanation_to_fill" app:destination="@id/fillBlankFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/fillBlankFragment"
+        android:name="com.example.loomi.ui.material.FillBlankFragment"
+        android:label="FillBlank">
+        <action android:id="@+id/action_fill_to_mc" app:destination="@id/multipleChoiceFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/multipleChoiceFragment"
+        android:name="com.example.loomi.ui.material.MultipleChoiceFragment"
+        android:label="MultipleChoice">
+        <action android:id="@+id/action_mc_to_result" app:destination="@id/resultFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/resultFragment"
+        android:name="com.example.loomi.ui.material.ResultFragment"
+        android:label="Result" />
+</navigation>
