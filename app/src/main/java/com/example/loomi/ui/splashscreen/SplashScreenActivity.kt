@@ -10,13 +10,17 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.example.loomi.MainActivity
 import com.example.loomi.R
 import com.example.loomi.databinding.ActivitySplashScreenBinding
+import com.example.loomi.ui.auth.LoginActivity
 import com.example.loomi.ui.auth.RegisterActivity
+import com.google.firebase.auth.FirebaseAuth
 
 @SuppressLint("CustomSplashScreen")
 class SplashScreenActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySplashScreenBinding
+    private val auth = FirebaseAuth.getInstance()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -38,5 +42,13 @@ class SplashScreenActivity : AppCompatActivity() {
             finish()
 
         }, 3000)
+
+        val user = auth.currentUser
+        if (user != null) {
+            startActivity(Intent(this, MainActivity::class.java))
+        } else {
+            startActivity(Intent(this, LoginActivity::class.java))
+        }
+        finish()
     }
-}
+    }

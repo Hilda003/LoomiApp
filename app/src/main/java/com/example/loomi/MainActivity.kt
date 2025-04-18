@@ -1,5 +1,6 @@
 package com.example.loomi
 
+
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -12,9 +13,12 @@ import com.example.loomi.ui.profile.ProfileFragment
 import com.example.loomi.ui.course.FragmentCourse
 import com.example.loomi.ui.home.HomeFragment
 
+
+
 class MainActivity : AppCompatActivity() {
     private lateinit var binding : ActivityMainBinding
     private lateinit var fragmentManager: FragmentManager
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
