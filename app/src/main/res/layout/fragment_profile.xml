@@ -130,9 +130,6 @@
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
-
-
-    <!-- Settings Card -->
     <androidx.cardview.widget.CardView
         android:id="@+id/card_settings"
         android:layout_width="match_parent"
@@ -152,13 +149,14 @@
             android:orientation="vertical"
             android:padding="30dp">
 
-            <!-- Night Mode -->
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
-                android:paddingVertical="8dp">
+                android:paddingVertical="8dp"
+                tools:ignore="UseSwitchCompatOrMaterialXml">
 
                 <FrameLayout
                     android:layout_width="36dp"
@@ -183,15 +181,16 @@
                     android:textSize="14sp"
                     android:textColor="@color/dark_green" />
 
-                <ImageView
-                    android:id="@+id/img_night_mode"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:src="@drawable/ic_switch"
-                    app:tint="@color/dark_green" />
+                <Switch
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginBottom="4dp"
+                    android:layout_gravity="center"
+                    android:id="@+id/switch_night_mode" />
             </LinearLayout>
 
-            <!-- Notification -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -219,19 +218,23 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:layout_marginStart="12dp"
-                    android:text="Notification"
+                    android:text="@string/notification"
                     android:textStyle="bold"
                     android:textSize="14sp"
                     android:textColor="@color/dark_green" />
 
-                <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:src="@drawable/ic_chevron"
-                    app:tint="@color/dark_green" />
+                <Switch
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginBottom="4dp"
+                    android:layout_gravity="center"
+                    android:id="@+id/notification"
+                    tools:ignore="UseSwitchCompatOrMaterialXml" />
             </LinearLayout>
 
-            <!-- Language -->
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -265,6 +268,7 @@
                     android:textColor="@color/dark_green" />
 
                 <ImageView
+                    android:id="@+id/btn_language"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:src="@drawable/ic_chevron"
