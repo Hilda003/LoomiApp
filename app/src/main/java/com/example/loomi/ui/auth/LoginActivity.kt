@@ -12,6 +12,7 @@ import com.example.loomi.R
 import com.example.loomi.databinding.ActivityLoginBinding
 import com.example.loomi.MainActivity
 import com.example.loomi.utils.State
+import com.google.firebase.auth.FirebaseAuth
 
 
 class LoginActivity : AppCompatActivity() {
@@ -61,6 +62,22 @@ class LoginActivity : AppCompatActivity() {
             val intent = Intent(this, RegisterActivity::class.java)
             startActivity(intent)
         }
+        binding.txtForgotPassword.setOnClickListener {
+            val email = binding.etEmail.editText?.text.toString().trim()
+            if (email.isEmpty()) {
+                Toast.makeText(this, "Please enter your email first", Toast.LENGTH_SHORT).show()
+            } else {
+                FirebaseAuth.getInstance().sendPasswordResetEmail(email)
+                    .addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            Toast.makeText(this, "Password reset link sent to your email", Toast.LENGTH_LONG).show()
+                        } else {
+                            Toast.makeText(this, task.exception?.message ?: "Failed to send reset email", Toast.LENGTH_LONG).show()
+                        }
+                    }
+            }
+        }
+
     }
 }
 

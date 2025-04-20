@@ -100,5 +100,7 @@
     <string name="your_name">Nama Lengkap</string>
     <string name="johndoe_gmail_com">Johndoe@gmail.com</string>
     <string name="show_hide_password">show hidden</string>
+    <string name="forgot_password">Lupa Kata sandi?\n</string>
+    <string name="notification">Notifikasi\n</string>
 
 </resources>

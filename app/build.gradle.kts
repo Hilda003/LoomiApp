@@ -81,6 +81,9 @@ dependencies {
     ksp(libs.hilt.compiler)
     ksp ("androidx.room:room-compiler:2.6.1")
 
+//    circle imageview
+    implementation(libs.circleimageview)
+
 
 //    Parcelize
     implementation(libs.kotlin.parcelize.runtime)
