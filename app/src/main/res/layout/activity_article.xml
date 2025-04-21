@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main"
+    android:padding="20dp"
+    android:background="@color/white"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.article.ActivityArticle">
+
+
+  <ImageView
+      android:id="@+id/imageView3"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="20dp"
+      android:contentDescription="@string/back"
+      android:src="@drawable/ic_back_arrow"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
+      app:tint="@color/black" />
+
+  <TextView
+      android:id="@+id/textView"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="16dp"
+      android:text="@string/discover_the_latest_articles"
+      android:textColor="@color/dark_green"
+      android:textSize="20sp"
+      android:textStyle="bold"
+      app:layout_constraintBottom_toTopOf="@id/search_bar"
+      app:layout_constraintStart_toStartOf="@+id/imageView3"
+      app:layout_constraintTop_toBottomOf="@+id/imageView3" />
+
+  <EditText
+      android:id="@+id/search_bar"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="16dp"
+      android:autofillHints="Search"
+      android:background="@drawable/bg_search"
+      android:drawableStart="@drawable/ic_search"
+      android:ems="10"
+      android:forceDarkAllowed="false"
+      android:hint="@string/search_material"
+      android:inputType="text"
+      android:padding="15dp"
+      app:layout_constraintBottom_toTopOf="@id/rv_article"
+      app:layout_constraintStart_toStartOf="@+id/textView"
+      app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_article"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        tools:listitem="@layout/item_article"
+        tools:itemCount="2"
+        app:layout_constraintTop_toBottomOf="@+id/search_bar"
+        app:layout_constraintStart_toStartOf="@+id/search_bar"
+        app:layout_constraintEnd_toEndOf="@+id/search_bar" />
+</androidx.constraintlayout.widget.ConstraintLayout>
