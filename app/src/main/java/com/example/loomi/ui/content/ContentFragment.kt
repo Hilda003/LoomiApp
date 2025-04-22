@@ -7,10 +7,11 @@ import android.view.ViewGroup
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
+import com.example.loomi.DummyFragment
 import com.example.loomi.databinding.FragmentContentBinding
-import com.example.loomi.model.Content
-import com.example.loomi.model.ContentType
-import com.example.loomi.model.Section
+import com.example.loomi.data.model.Content
+import com.example.loomi.data.model.ContentType
+import com.example.loomi.data.model.Section
 
 
 class ContentFragment : Fragment() {
@@ -47,7 +48,8 @@ class ContentFragment : Fragment() {
                 currentIndex++
                 showContent(currentIndex)
             } else {
-                // TODO: Handle selesai materi
+                // Handle the case when the last content is reached
+
             }
         }
 
@@ -61,12 +63,13 @@ class ContentFragment : Fragment() {
     private fun showContent(index: Int) {
         val content = contents[index]
 
-        val fragment = when (content.type) {
-            ContentType.EXPLANATION -> ExplanationFragment.newInstance(content)
-            else -> {
-
-                throw IllegalArgumentException("Unknown content type: ${content.type}")
-            }
+        val fragment: Fragment = when (content.type) {
+            ContentType.EXPLANATION -> DummyFragment.newInstance("Explanation", content.description)
+            ContentType.CODE_SNIPPET -> DummyFragment.newInstance("Code Snippet", content.description)
+            ContentType.FILL_IN_BLANK -> DummyFragment.newInstance("Fill in the Blank", content.description)
+            ContentType.MULTIPLE_CHOICE -> DummyFragment.newInstance("Multiple Choice", content.description)
+            ContentType.RESULT -> DummyFragment.newInstance("Result", content.description)
+            else -> throw IllegalArgumentException("Unknown content type: ${content.type}")
         }
 
         childFragmentManager.beginTransaction()
@@ -75,6 +78,7 @@ class ContentFragment : Fragment() {
 
         updateProgress()
     }
+
 
     private fun updateProgress() {
         val progress = ((currentIndex + 1).toFloat() / contents.size) * 100

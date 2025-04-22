@@ -12,7 +12,20 @@
           "package_name": "com.example.loomi"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "950066773325-b96saomt5bpqttr3t80gngse8jqjaj1c.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.loomi",
+            "certificate_hash": "a26d1a20b81f53219f5a465b00115518ad2f66cd"
+          }
+        },
+        {
+          "client_id": "950066773325-t76ohr95p2m82ejkchedip48brj09dnv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyCD_7E9hmu451eAFLhtPV-gLoAp4crPUcc"
@@ -20,7 +33,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "950066773325-t76ohr95p2m82ejkchedip48brj09dnv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }
