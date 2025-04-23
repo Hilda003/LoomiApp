@@ -19,6 +19,9 @@
         android:theme="@style/Theme.Loomi"
         tools:targetApi="33">
         <activity
+            android:name=".ui.onboarding.OnBoardingActivity"
+            android:exported="false" />
+        <activity
             android:name=".FinishActivity"
             android:exported="false" />
         <activity
