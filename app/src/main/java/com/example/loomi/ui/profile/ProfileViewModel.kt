@@ -1,3 +1,5 @@
 package com.example.loomi.ui.profile
 
-class ProfileViewModel
+import androidx.lifecycle.ViewModel
+
+class ProfileViewModel : ViewModel()

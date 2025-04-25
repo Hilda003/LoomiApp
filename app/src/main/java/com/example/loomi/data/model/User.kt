@@ -1,4 +1,4 @@
-package com.example.loomi.model
+package com.example.loomi.data.model
 
 data class User(
     val id: String,

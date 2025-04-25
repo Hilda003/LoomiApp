@@ -1,5 +1,6 @@
 package com.example.loomi.ui.article
 
+import android.R.attr.text
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -9,13 +10,14 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.bumptech.glide.Glide
 import com.example.loomi.R
+import com.example.loomi.data.response.User
 import com.example.loomi.databinding.ActivityDetailArticleBinding
 
 class DetailArticleActivity : AppCompatActivity() {
     private lateinit var binding: ActivityDetailArticleBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+//        enableEdgeToEdge()
         binding = ActivityDetailArticleBinding.inflate(layoutInflater)
         setContentView(binding.root)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
@@ -43,5 +45,7 @@ class DetailArticleActivity : AppCompatActivity() {
         binding.icBack.setOnClickListener {
             onBackPressedDispatcher.onBackPressed()
         }
+
+
     }
 }

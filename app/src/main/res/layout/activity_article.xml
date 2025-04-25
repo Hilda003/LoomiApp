@@ -4,10 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/main"
-    android:padding="20dp"
-    android:background="@color/white"
+    android:padding="25dp"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     tools:context=".ui.article.ActivityArticle">
 
 
@@ -17,7 +17,7 @@
       android:layout_height="wrap_content"
       android:layout_marginTop="20dp"
       android:contentDescription="@string/back"
-      android:src="@drawable/ic_back_arrow"
+      android:src="@drawable/ic_arrow_back"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toTopOf="parent"
       app:tint="@color/black" />
@@ -28,9 +28,7 @@
       android:layout_height="wrap_content"
       android:layout_marginTop="16dp"
       android:text="@string/discover_the_latest_articles"
-      android:textColor="@color/dark_green"
-      android:textSize="20sp"
-      android:textStyle="bold"
+      style="@style/PoppinsBold"
       app:layout_constraintBottom_toTopOf="@id/search_bar"
       app:layout_constraintStart_toStartOf="@+id/imageView3"
       app:layout_constraintTop_toBottomOf="@+id/imageView3" />
@@ -40,19 +38,22 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_marginTop="16dp"
-      android:autofillHints="Search"
+      android:autofillHints="Cari Artikel"
       android:background="@drawable/bg_search"
       android:drawableStart="@drawable/ic_search"
       android:ems="10"
+      style="@style/PoppinsRegular"
       android:forceDarkAllowed="false"
       android:hint="@string/search_material"
       android:inputType="text"
       android:padding="15dp"
+      android:textColor="@color/black"
       app:layout_constraintBottom_toTopOf="@id/rv_article"
       app:layout_constraintStart_toStartOf="@+id/textView"
       app:layout_constraintTop_toBottomOf="@+id/textView" />
 
-    <androidx.recyclerview.widget.RecyclerView
+
+  <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_article"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

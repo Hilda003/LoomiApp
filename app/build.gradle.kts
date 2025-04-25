@@ -6,6 +6,7 @@ plugins {
     alias(libs.plugins.google.gms.google.services)
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
+    id("kotlin-parcelize")
     id("androidx.navigation.safeargs.kotlin")
 
 }
@@ -54,20 +55,27 @@ dependencies {
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
-    implementation(libs.firebase.auth)
-    implementation(libs.androidx.credentials)
-    implementation(libs.androidx.credentials.play.services.auth)
-    implementation(libs.googleid)
-    implementation(libs.firebase.firestore)
+
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
     implementation (libs.androidx.lifecycle.livedata.ktx)
     implementation(libs.androidx.navigation.fragment)
+
+
+//    gms
+    implementation(libs.firebase.auth)
+    implementation ("com.google.firebase:firebase-auth:21.0.3")
+    implementation ("com.google.firebase:firebase-firestore:24.0.1")
+    implementation ("com.google.android.gms:play-services-auth:20.4.0")
+
+    implementation(libs.firebase.firestore)
+//    implementation(libs.play.services.auth)
+    implementation (libs.firebase.bom)
 //    fragment
-    implementation("androidx.fragment:fragment-ktx:1.6.1")
+    implementation("androidx.fragment:fragment-ktx:1.8.6")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1")
-    implementation("androidx.navigation:navigation-fragment-ktx:2.4.0")
-    implementation("androidx.navigation:navigation-ui-ktx:2.4.0")
+    implementation(libs.androidx.navigation.fragment.ktx.v240)
+    implementation(libs.androidx.navigation.ui.ktx.v240)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
@@ -83,6 +91,12 @@ dependencies {
 
 //    circle imageview
     implementation(libs.circleimageview)
+
+//    retrofit
+    implementation(libs.retrofit)
+    implementation(libs.converter.gson)
+    implementation(libs.logging.interceptor)
+    implementation(libs.okhttp)
 
 
 //    Parcelize

@@ -20,7 +20,7 @@
     <string name="search_material">Search material</string>
     <string name="your_progress_is_amazing">Your progress is amazing!</string>
     <string name="keep_up_the_good_work">Keep up the good work</string>
-    <string name="continue_studying">Continue Studying</string>
+    <string name="continue_studying">Lanjut Belajar</string>
     <string name="night_mode">Night mode</string>
     <string name="john_doe">John Doe</string>
     <string name="kotlin">Kotlin</string>
@@ -45,7 +45,7 @@
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
     <string name="second_fragment_label">Second Fragment</string>
-    <string name="next">Next</string>
+    <string name="next">Lanjut</string>
     <string name="previous">Previous</string>
 
     <string name="lorem_ipsum">
@@ -68,31 +68,16 @@
         lacinia sit amet, tristique id quam. Cras eu consequat dui. Suspendisse sodales nunc ligula,
         in lobortis sem porta sed. Integer id ultrices magna, in luctus elit. Sed a pellentesque
         est.\n\n
-        Aenean nunc velit, lacinia sed dolor sed, ultrices viverra nulla. Etiam a venenatis nibh.
-        Morbi laoreet, tortor sed facilisis varius, nibh orci rhoncus nulla, id elementum leo dui
-        non lorem. Nam mollis ipsum quis auctor varius. Quisque elementum eu libero sed commodo. In
-        eros nisl, imperdiet vel imperdiet et, scelerisque a mauris. Pellentesque varius ex nunc,
-        quis imperdiet eros placerat ac. Duis finibus orci et est auctor tincidunt. Sed non viverra
-        ipsum. Nunc quis augue egestas, cursus lorem at, molestie sem. Morbi a consectetur ipsum, a
-        placerat diam. Etiam vulputate dignissim convallis. Integer faucibus mauris sit amet finibus
-        convallis.\n\n
-        Phasellus in aliquet mi. Pellentesque habitant morbi tristique senectus et netus et
-        malesuada fames ac turpis egestas. In volutpat arcu ut felis sagittis, in finibus massa
-        gravida. Pellentesque id tellus orci. Integer dictum, lorem sed efficitur ullamcorper,
-        libero justo consectetur ipsum, in mollis nisl ex sed nisl. Donec maximus ullamcorper
-        sodales. Praesent bibendum rhoncus tellus nec feugiat. In a ornare nulla. Donec rhoncus
-        libero vel nunc consequat, quis tincidunt nisl eleifend. Cras bibendum enim a justo luctus
-        vestibulum. Fusce dictum libero quis erat maximus, vitae volutpat diam dignissim.
     </string>
     <string name="val_a_5_nval_b_10_nif_a_b">val a = 5\nval b = 10\nif ( ___ a ___ b )</string>
     <string name="finish">Selesai!</string>
-    <string name="next_material">Materi selanjutnya</string>
+    <string name="sample_code_snippet"> b ) {\n println("Hello World")\n}</string>
     <string name="while_and_do_while">While and Do While</string>
     <string name="description_kotlin">Deskripsi kelas Kotlin di sini...</string>
     <string name="your_password">Password</string>
     <string name="password">Kata sandi</string>
     <string name="your_email">Email</string>
-    <string name="hi_welcome_back">Hi, Welcome Back</string>
+    <string name="hi_welcome_back">Hai, selamat datang kembali</string>
     <string name="email">Email</string>
     <string name="logo">Logo</string>
     <string name="create_account">Buat akun baru</string>
@@ -100,7 +85,19 @@
     <string name="your_name">Nama Lengkap</string>
     <string name="johndoe_gmail_com">Johndoe@gmail.com</string>
     <string name="show_hide_password">show hidden</string>
-    <string name="forgot_password">Lupa Kata sandi?\n</string>
-    <string name="notification">Notifikasi\n</string>
+    <string name="forgot_password">Lupa Kata sandi?</string>
+    <string name="notification">Notifikasi</string>
+    <string name="description_article">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean mattis, dolor vitae eleifend tristique, quam arcu facilisis nunc, ut egestas dui nisi placerat arcu. Ut sapien libero, tristique eget porta quis, interdum id leo. Ut ullamcorper pellentesque justo, quis dictum sapien posuere et. Fusce dictum pulvinar risus eu scelerisque. Vivamus quis auctor ex, ut bibendum lacus. Nulla accumsan interdum augue, in maximus nulla porttitor vitae. Vestibulum tristique laoreet eleifend. Fusce aliquet felis sit amet massa placerat ultricies. Curabitur dapibus fermentum tincidunt. Integer ut luctus metus. Vivamus justo massa, rhoncus quis neque quis, faucibus tincidunt ex.</string>
+    <string name="recommendation_article">Rekomendasi Artikel</string>
+    <string name="article_image">Article Image</string>
+    <string name="discover_the_latest_articles">Temukan artikel terbaru</string>
+    <string name="read_more">Baca selengkapnya</string>
+    <string name="content_type">Content Type</string>
+    <string name="title_content">Judul</string>
+    <string name="description_content">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</string>
+    <string name="if_else">If Else</string>
+    <string name="next_material">Materi Selanjutnya</string>
+    <string name="skip">Lompati</string>
+    <string name="_4_10">4/10</string>
 
 </resources>

@@ -3,6 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:id="@+id/item_material"
+    android:layout_marginStart="8dp"
+    android:layout_marginEnd="8dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_marginTop="10dp"
     app:cardCornerRadius="12dp"
@@ -40,6 +42,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/kotlin_fundamental"
                 android:layout_marginTop="10dp"
+                style="@style/PoppinsSemiBold"
                 android:textSize="16sp"
                 android:textColor="@color/dark_green"
                 android:textStyle="bold"/>
@@ -48,35 +51,12 @@
                 android:id="@+id/tvCompletion"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="4/10"
-                android:textSize="14sp"
-                android:textColor="@color/dark_green"
-                android:textStyle="bold"
+                android:text="@string/_4_10"
+                style="@style/PoppinsMedium"
                 android:layout_marginTop="10dp"/>
 
-<!--            <ProgressBar-->
-<!--                style="?android:attr/progressBarStyleHorizontal"-->
-<!--                android:id="@+id/progressBar"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="6dp"-->
-<!--                android:progress="87"-->
-<!--                android:max="100"-->
-<!--                android:progressTint="@color/dark_green"-->
-<!--                android:backgroundTint="@color/light_gray"-->
-<!--                android:layout_marginTop="15dp"/>-->
 
         </LinearLayout>
-
-<!--        <TextView-->
-<!--            android:id="@+id/tvProgressPercentage"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:text="87%"-->
-<!--            android:layout_marginLeft="5dp"-->
-<!--            android:layout_marginTop="80dp"-->
-<!--            android:textSize="16sp"-->
-<!--            android:textColor="@color/dark_green"-->
-<!--            android:textStyle="bold"/>-->
     </LinearLayout>
 
 

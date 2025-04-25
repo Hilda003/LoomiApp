@@ -7,7 +7,6 @@
     android:padding="16dp"
     tools:context=".ui.content.ContentFragment">
 
-    <!-- Progress Bar -->
     <TextView
         android:id="@+id/tvTitleContent"
         android:layout_width="wrap_content"
@@ -29,7 +28,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvTitleContent" />
 
-    <!-- Container untuk content dinamis -->
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/nav_host_fragment"
         android:layout_width="0dp"

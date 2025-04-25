@@ -9,45 +9,40 @@
     android:padding="22dp"
     tools:context=".ContentActivity">
 
-    <TextView
-        android:id="@+id/tvContentType"
+
+    <ImageView
+        android:id="@+id/ic_back"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:text="@string/content_type"
-        android:textSize="14sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="20dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_arrow_back"
+        app:tint="@color/black" />
 
     <TextView
         android:id="@+id/tvContentTitle"
+        style="@style/PoppinsBold"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/title_content"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintTop_toBottomOf="@id/tvContentType"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="17dp"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="8dp"/>
+        app:layout_constraintStart_toEndOf="@+id/ic_back"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/tvContentDescription"
-        android:layout_width="0dp"
+    <FrameLayout
+        android:id="@+id/contentContainer"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:text="@string/description_content"
-        android:textSize="16sp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="20dp"
         android:layout_marginBottom="32dp"
-        android:textStyle="normal"
-        android:lineSpacingExtra="4dp"
-        android:justificationMode="inter_word"
         app:layout_constraintTop_toBottomOf="@id/tvContentTitle"
         app:layout_constraintBottom_toTopOf="@id/btnNext"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        />
+
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnNext"
@@ -57,6 +52,7 @@
         app:cornerRadius="10dp"
         android:textColor="@color/white"
         android:layout_marginBottom="30dp"
+        style="@style/PoppinsSemiBold"
         android:backgroundTint="@color/dark_green"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

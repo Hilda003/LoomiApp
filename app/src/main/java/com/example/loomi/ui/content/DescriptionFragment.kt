@@ -26,11 +26,11 @@ class DescriptionFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         // Set the title and description for the Kotlin Fundamental material
 
-        binding.tvDeskripsi.text = HtmlCompat.fromHtml(
+        binding.tvDescription.text = HtmlCompat.fromHtml(
             getString(R.string.description_kotlin_fundamental),
             HtmlCompat.FROM_HTML_MODE_LEGACY
         )
-        binding.tvDeskripsi.movementMethod = LinkMovementMethod.getInstance()
+        binding.tvDescription.movementMethod = LinkMovementMethod.getInstance()
     }
 
     override fun onDestroyView() {

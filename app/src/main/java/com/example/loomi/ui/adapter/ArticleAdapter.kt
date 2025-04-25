@@ -8,8 +8,9 @@ import com.example.loomi.R
 import com.example.loomi.data.response.ResponseArticleItem
 import com.example.loomi.databinding.ItemArticleBinding
 
+
 class ArticleAdapter(
-    private val list: List<ResponseArticleItem>,
+    private var articleList: List<ResponseArticleItem>,
     private val onClick: (ResponseArticleItem) -> Unit
 ) : RecyclerView.Adapter<ArticleAdapter.ViewHolder>() {
 
@@ -26,6 +27,7 @@ class ArticleAdapter(
             } else {
                 binding.courseImg.setImageResource(R.drawable.article1)
             }
+
             binding.root.setOnClickListener {
                 onClick(article)
             }
@@ -38,9 +40,15 @@ class ArticleAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(list[position])
+        holder.bind(articleList[position])
     }
 
-    override fun getItemCount(): Int = list.size
+    override fun getItemCount(): Int = articleList.size
+
+    fun updateList(newList: List<ResponseArticleItem>) {
+        articleList = newList
+        notifyDataSetChanged()
+    }
 }
+
 

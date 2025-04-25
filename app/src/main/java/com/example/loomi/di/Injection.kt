@@ -1,4 +1,3 @@
 package com.example.loomi.di
 
-class Injection {
-}
+class Injection

@@ -3,9 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="16dp"
     app:cardCornerRadius="12dp"
     app:cardElevation="4dp"
+    android:layout_marginTop="12dp"
+    android:layout_marginStart="12dp"
+    android:layout_marginEnd="12dp"
     app:cardBackgroundColor="@color/white"
     android:background="@android:color/white">
 
@@ -13,7 +15,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="8dp"
+        android:padding="5dp"
         android:orientation="vertical">
 
         <ImageView
@@ -32,8 +34,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:textColor="@color/black"
-            android:textStyle="bold"
+            style="@style/PoppinsBold"
+            android:textSize="14sp"
             android:text="@string/txt_title_articles" />
 
         <LinearLayout
@@ -52,6 +54,7 @@
                 android:id="@+id/tv_category"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                style="@style/PoppinsRegular"
                 android:text="Technical" />
 
             <ImageView
@@ -66,6 +69,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                style="@style/PoppinsRegular"
                 android:layout_marginStart="3dp"
                 android:text="5 minutes" />
         </LinearLayout>

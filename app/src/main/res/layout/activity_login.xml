@@ -20,8 +20,11 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_logo" />
 
+
+
     <TextView
         android:id="@+id/textView2"
+        style="@style/PoppinsRegular"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
@@ -49,7 +52,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:hintTextColor="@color/black"
-            android:textColor="@color/black"/>
+            style="@style/PoppinsRegular" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -73,7 +76,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:hintTextColor="@color/black"
-            android:textColor="@color/black"
+            style="@style/PoppinsRegular"
             android:inputType="textPassword"/>
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -84,6 +87,7 @@
         android:layout_marginEnd="32dp"
         android:layout_marginTop="8dp"
         android:text="@string/forgot_password"
+        style="@style/PoppinsRegular"
         android:textColor="@color/dark_green"
         android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -108,7 +112,8 @@
         android:layout_marginEnd="32dp"
         android:text="@string/login"
         android:textColor="@android:color/white"
-        android:textSize="18sp"
+        android:textSize="19sp"
+        style="@style/PoppinsSemiBold"
         app:backgroundTint="@color/green"
         app:cornerRadius="15dp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -131,6 +136,8 @@
             android:id="@+id/textView9"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            style="@style/PoppinsRegular"
+            android:textSize="12sp"
             android:text="@string/don_t_have_an_account" />
 
         <TextView
@@ -138,6 +145,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="2dp"
+            style="@style/PoppinsRegular"
+            android:textSize="12sp"
             android:textColor="@color/dark_green"
             android:text="@string/sign_up" />
     </LinearLayout>

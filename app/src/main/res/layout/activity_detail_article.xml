@@ -8,7 +8,7 @@
     android:padding="16dp"
     android:background="@color/white"
     android:forceDarkAllowed="false"
-    tools:context=".ui.article.DetailArticleActivity">
+    tools:context=".ui.material.DetailMaterialActivity">
 
 
     <ImageView
@@ -18,13 +18,14 @@
         android:layout_marginTop="24dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_back_arrow" />
+        app:srcCompat="@drawable/ic_arrow_back"
+        app:tint="@color/black" />
 
     <ImageView
         android:id="@+id/cover_image_article"
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:scaleType="fitCenter"
+        android:scaleType="centerCrop"
         android:layout_marginTop="20dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ic_back"
@@ -32,23 +33,50 @@
 
     <TextView
         android:id="@+id/tv_title_article"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="@string/kotlin_fundamental"
-        android:textSize="20sp"
-        android:textStyle="bold"
+        style="@style/PoppinsBold"
+        app:layout_constraintTop_toBottomOf="@+id/cover_image_article"
         app:layout_constraintStart_toStartOf="@+id/cover_image_article"
-        app:layout_constraintTop_toBottomOf="@+id/cover_image_article" />
+        app:layout_constraintEnd_toStartOf="@+id/socialInfoLayout"
+        app:layout_goneMarginEnd="8dp" />
+
+    <LinearLayout
+        android:id="@+id/socialInfoLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginStart="16dp"
+        android:gravity="center_vertical"
+        app:layout_constraintTop_toTopOf="@+id/tv_title_article"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <ImageView
+            android:id="@+id/ivGithub"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_github"
+            android:contentDescription="GitHub"/>
+
+        <ImageView
+            android:id="@+id/ivTwitter"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginStart="8dp"
+            android:src="@drawable/ic_twitter"
+            android:contentDescription="Twitter"/>
+    </LinearLayout>
+
 
     <TextView
         android:id="@+id/tv_description_article"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
-        android:textSize="14sp"
-        android:textColor="@color/black"
-        android:textStyle="normal"
+        style="@style/PoppinsRegular"
+        android:justificationMode="inter_character"
         android:lineSpacingExtra="4dp"
         android:lineSpacingMultiplier="1.2"
         android:text="@string/description_article"
@@ -61,8 +89,7 @@
         android:layout_height="wrap_content"
         android:text="@string/read_more"
         android:textSize="15sp"
-        android:textColor="@color/dark_green"
-        android:textStyle="bold"
+        style="@style/PoppinsBold"
         android:layout_marginTop="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

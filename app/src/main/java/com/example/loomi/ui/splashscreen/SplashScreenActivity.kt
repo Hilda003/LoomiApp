@@ -17,6 +17,7 @@ import com.example.loomi.ui.auth.LoginActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.example.loomi.R
 import com.example.loomi.ui.auth.RegisterActivity
+import com.example.loomi.ui.onboarding.OnBoardingActivity
 import kotlin.jvm.java
 
 
@@ -44,9 +45,8 @@ class SplashScreenActivity : AppCompatActivity() {
                 startActivity(intent)
                 overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
             } else {
-                val intent = Intent(this, RegisterActivity::class.java)
+                val intent = Intent(this, OnBoardingActivity::class.java)
                 startActivity(intent)
-
             }
             finish()
         }, 3000)

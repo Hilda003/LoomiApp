@@ -1,10 +1,15 @@
 package com.example.loomi.ui.course
 
 import android.os.Bundle
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
+import android.widget.TextView
+import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
+import com.example.loomi.R
 import com.example.loomi.databinding.FragmentCourseBinding
 
 import com.example.loomi.ui.adapter.CoursePagerAdapter
@@ -30,6 +35,8 @@ class FragmentCourse : Fragment() {
         adapter = CoursePagerAdapter(this)
         binding.viewPager.adapter = adapter
 
+        val font = ResourcesCompat.getFont(requireContext(), R.font.poppins_semibold)
+
         TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
             tab.text = when (position) {
                 0 -> "Kelas"
@@ -37,6 +44,21 @@ class FragmentCourse : Fragment() {
                 else -> null
             }
         }.attach()
+
+        for (i in 0 until binding.tabLayout.tabCount) {
+            val tab = binding.tabLayout.getTabAt(i)
+            val tabTextView = TextView(requireContext()).apply {
+                text = tab?.text
+                typeface = font
+                gravity = Gravity.CENTER
+                layoutParams = LinearLayout.LayoutParams(
+                    ViewGroup.LayoutParams.WRAP_CONTENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT
+                )
+            }
+            tab?.customView = tabTextView
+        }
+
 
     }
 

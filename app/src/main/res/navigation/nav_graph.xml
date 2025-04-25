@@ -19,7 +19,7 @@
         android:label="Content" >
         <argument
             android:name="SECTION_DATA"
-            app:argType="com.example.loomi.model.Section" />
+            app:argType="com.example.loomi.data.model.Section" />
     </fragment>
 
     <fragment

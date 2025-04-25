@@ -1,59 +1,45 @@
 package com.example.loomi.ui.content
 
+import android.R.attr.text
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.example.loomi.databinding.FragmentExplanationBinding
-import com.example.loomi.model.Content
+import com.example.loomi.data.model.Content
 
+
+// Fragment to receive the Content data
 class ExplanationFragment : Fragment() {
 
-    private var _binding: FragmentExplanationBinding? = null
-    private val binding get() = _binding!!
+    private lateinit var content: Content
 
-    private var content: Content? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        content = arguments?.getParcelable("CONTENT_DATA")
+    companion object {
+        fun newInstance(content: Content): ExplanationFragment {
+            val fragment = ExplanationFragment()
+            val bundle = Bundle()
+            bundle.putParcelable("content", content)
+            fragment.arguments = bundle
+            return fragment
+        }
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentExplanationBinding.inflate(inflater, container, false)
+    ): View? {
+        val binding = FragmentExplanationBinding.inflate(inflater, container, false)
+        content = arguments?.getParcelable("content") ?: return binding.root
+
+        // Display content data
+//        binding.txtTitle.text = content.title
+        binding.tvExplanation.text = content.description
+
+
         return binding.root
     }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-
-        content?.let {
-            binding.tvTitle.text = it.title
-            binding.tvDescription.text = it.description
-        } ?: run {
-            binding.tvTitle.text = "No content"
-            binding.tvDescription.text = "Data tidak tersedia"
-        }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
-    companion object {
-        // Pastikan newInstance ada
-        fun newInstance(content: Content): ExplanationFragment {
-            val fragment = ExplanationFragment()
-            val args = Bundle()
-            args.putParcelable("CONTENT_DATA", content)
-            fragment.arguments = args
-            return fragment
-        }
-    }
 }
+
+

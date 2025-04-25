@@ -1,6 +1,7 @@
 package com.example.loomi.ui.adapter
 
 import android.content.Intent
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Toast
@@ -34,6 +35,8 @@ class DetailMaterialAdapter(
                 }
 
             }
+            Log.d("AdapterCheck", "Section ID: ${section.id}, Title: ${section.title}")
+
 
         }
     }

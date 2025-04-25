@@ -15,6 +15,7 @@ import com.example.loomi.utils.State
 import com.google.firebase.auth.FirebaseAuth
 
 
+
 class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
     private val viewModel: LoginViewModel by viewModels()

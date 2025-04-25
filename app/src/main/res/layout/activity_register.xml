@@ -11,8 +11,8 @@
 
     <ImageView
         android:id="@+id/logo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
         android:layout_marginTop="62dp"
         android:contentDescription="@string/logo"
         app:layout_constraintEnd_toEndOf="parent"
@@ -21,14 +21,27 @@
         app:srcCompat="@drawable/ic_logo" />
 
     <TextView
+        android:id="@+id/txt_welcome"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Selamat Datang"
+        style="@style/PoppinsSemiBold"
+        android:layout_marginTop="8dp"
+        android:textSize="22sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/logo" />
+
+    <TextView
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
+        style="@style/PoppinsRegular"
         android:text="@string/fill_your_information_below"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/logo" />
+        app:layout_constraintTop_toBottomOf="@+id/txt_welcome" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/et_username"
@@ -47,7 +60,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:hintTextColor="@color/black"
-            android:textColor="@color/black"
+            style="@style/PoppinsRegular"
             android:hint="@string/your_name" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -69,7 +82,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:hintTextColor="@color/black"
-            android:textColor="@color/black"
+            style="@style/PoppinsRegular"
             android:hint="@string/your_email" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -94,7 +107,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:hintTextColor="@color/black"
-            android:textColor="@color/black"
+            style="@style/PoppinsRegular"
             android:inputType="textPassword"/>
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -103,7 +116,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
-        android:textColor="@color/black"
+        style="@style/PoppinsRegular"
         android:text="@string/agree_with_terms_and_conditions"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/et_password" />
@@ -130,6 +143,7 @@
         android:text="@string/register"
         android:textColor="@color/white"
         app:cornerRadius="10dp"
+        style="@style/PoppinsSemiBold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/checkbox" />
@@ -150,6 +164,7 @@
             android:id="@+id/textView9"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            style="@style/PoppinsRegular"
             android:text="@string/already_have_an_account" />
 
         <TextView
@@ -157,6 +172,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="2dp"
+            style="@style/PoppinsRegular"
             android:textColor="@color/dark_green"
             android:text="@string/sign_in" />
     </LinearLayout>

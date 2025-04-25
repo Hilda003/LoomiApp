@@ -10,6 +10,8 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -71,7 +73,7 @@ class ProfileFragment : Fragment() {
                 binding.ivProfile.setImageBitmap(generateInitialBitmap(initial))
             }
         } else {
-            Toast.makeText(requireContext(), "User not logged in", Toast.LENGTH_SHORT).show()
+//            Toast.makeText(requireContext(), "User not logged in", Toast.LENGTH_SHORT).show()
             startActivity(Intent(requireContext(), LoginActivity::class.java))
             requireActivity().finish()
         }
@@ -147,7 +149,6 @@ class ProfileFragment : Fragment() {
 
         dialog.show()
     }
-
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
