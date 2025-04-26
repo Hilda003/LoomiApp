@@ -23,11 +23,11 @@
 
     <ImageView
         android:id="@+id/imgBanner"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="180dp"
         android:contentDescription="@string/kotlin_fundamental"
         android:scaleType="fitCenter"
-        android:background="@drawable/article1"
+        android:background="@drawable/rounded_bg"
         app:layout_constraintTop_toBottomOf="@id/btnBack"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

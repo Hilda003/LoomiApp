@@ -12,6 +12,7 @@ import com.google.android.gms.tasks.Tasks
 import com.google.firebase.firestore.FirebaseFirestore
 
 class MaterialViewModel : ViewModel() {
+
     private val _materials = MutableLiveData<List<Material>>()
     val materials: LiveData<List<Material>> get() = _materials
 
@@ -35,22 +36,26 @@ class MaterialViewModel : ViewModel() {
                 }
 
                 snapshot.documents.forEach { doc ->
-                    val baseMaterial = doc.toObject(Material::class.java)?.copy(id = doc.id)
+                    val raw = doc.data ?: emptyMap<String, Any>()
 
-                    if (baseMaterial != null) {
-                        fetchSections(doc.id) { sections ->
-                            val fullMaterial = baseMaterial.copy(sections = sections)
-                            materialList.add(fullMaterial)
+                    val id = (raw["id"] as? Long)?.toInt() ?: 0
+                    val title = raw["title"] as? String ?: ""
+                    val imgResId = raw["imgResId"] as? String ?: ""
 
-                            completedTasks++
-                            if (completedTasks == totalTasks) {
-                                _materials.value = materialList
-                            }
-                        }
-                    } else {
+                    val baseMaterial = Material(
+                        id = id,
+                        title = title,
+                        imgResId = imgResId,
+                        sections = emptyList()
+                    )
+
+                    fetchSections(doc.id) { sections ->
+                        val fullMaterial = baseMaterial.copy(sections = sections)
+                        materialList.add(fullMaterial)
+
                         completedTasks++
                         if (completedTasks == totalTasks) {
-                            _materials.value = materialList
+                            _materials.value = materialList.sortedBy { it.id }
                         }
                     }
                 }
@@ -71,6 +76,7 @@ class MaterialViewModel : ViewModel() {
                     val id = (raw["id"] as? Long)?.toInt() ?: 0
                     val title = raw["title"] as? String ?: ""
                     val isLocked = raw["isLocked"] as? Boolean ?: true
+                    val isCompleted = raw["isCompleted"] as? Boolean ?: false
 
                     db.collection("materials")
                         .document(materialId)
@@ -87,6 +93,7 @@ class MaterialViewModel : ViewModel() {
                                 id = id,
                                 title = title,
                                 isLocked = isLocked,
+                                isCompleted = isCompleted,
                                 content = contentList
                             )
                         }
@@ -112,27 +119,21 @@ class MaterialViewModel : ViewModel() {
         val type = ContentType.fromString(typeStr)
         val title = raw["title"] as? String ?: ""
 
-        Log.d("ParseContent", "Raw content: $raw")
-
         return when (type) {
             ContentType.EXPLANATION -> {
                 val dataRaw = raw["data"]
-                val description = when (dataRaw) {
-                    is List<*> -> dataRaw.joinToString("\n") { it.toString() } // Menggabungkan list jadi satu string
-                    is Map<*, *> -> dataRaw["text"] as? String ?: ""
-                    else -> ""
+                val descriptionList = when (dataRaw) {
+                    is List<*> -> dataRaw.map { it.toString() }
+                    is Map<*, *> -> listOf(dataRaw["text"] as? String ?: "")
+                    else -> emptyList()
                 }
-
-                Log.d("ParseContent", "Explanation content parsed: title=$title, description=$description")
-
                 Content(
                     type = type,
                     title = title,
-                    description = description
+                    descriptionList = descriptionList
                 )
             }
-
-            ContentType.FILL_IN_THE_BLANK -> {
+            ContentType.FILL_IN_BLANK -> {
                 val dataMap = raw["data"] as? Map<*, *> ?: return null
 
                 Content(
@@ -140,7 +141,7 @@ class MaterialViewModel : ViewModel() {
                     title = title,
                     description = dataMap["text"] as? String ?: "",
                     code = dataMap["code"] as? String,
-                    correctAnswer = (dataMap["correctAnswer"] as? List<*>)?.joinToString()
+                    correctAnswer = (dataMap["correctAnswer"] as? List<*>)?.mapNotNull { it?.toString() }
                 )
             }
 
@@ -153,7 +154,7 @@ class MaterialViewModel : ViewModel() {
                     question = dataMap["question"] as? String,
                     code = dataMap["code"] as? String,
                     choices = dataMap["choices"] as? List<String>,
-                    correctAnswer = raw["correctAnswer"] as? String
+                    correctAnswer = (dataMap["correctAnswer"] as? List<*>)?.mapNotNull { it?.toString() }
                 )
             }
 
@@ -164,11 +165,10 @@ class MaterialViewModel : ViewModel() {
                     title = title,
                     description = dataMap["text"] as? String ?: "",
                     choices = dataMap["drag"] as? List<String>,
-                    correctAnswer = (dataMap["correctAnswer"] as? List<*>)?.joinToString()
+                    correctAnswer = (dataMap["correctAnswer"] as? List<*>)?.mapNotNull { it?.toString() }
                 )
             }
         }
     }
-
-
 }
+

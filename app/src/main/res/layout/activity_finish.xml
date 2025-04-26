@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
+    android:background="@color/white"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="22dp"
@@ -57,9 +58,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="150dp"
         android:layout_marginBottom="32dp"
-
         android:text="@string/while_and_do_while"
-        app:layout_constraintBottom_toTopOf="@+id/btn_next_materi"
+        app:layout_constraintBottom_toTopOf="@+id/btn_next_material"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView7" />
@@ -72,13 +72,13 @@
         android:layout_marginTop="8dp"
         android:layout_marginBottom="32dp"
         android:text="@string/next_material"
-        app:layout_constraintBottom_toTopOf="@+id/btn_next_materi"
+        app:layout_constraintBottom_toTopOf="@+id/btn_next_material"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txt_next_material" />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/btn_next_materi"
+        android:id="@+id/btn_next_material"
         style="@style/PoppinsMedium"
         android:layout_width="match_parent"
         android:layout_height="60dp"

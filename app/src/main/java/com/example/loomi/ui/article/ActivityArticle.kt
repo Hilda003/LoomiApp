@@ -38,7 +38,7 @@ class ActivityArticle : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityArticleBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        enableEdgeToEdge()
+//        enableEdgeToEdge()
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
@@ -106,23 +106,4 @@ class ActivityArticle : AppCompatActivity() {
             }
         }
     }
-
-//    private fun setupCategoryButtons() {
-//        val buttons = listOf(binding.btnTech, binding.btnDesign, binding.btnCareer)
-//
-//        buttons.forEach { button ->
-//            button.setOnClickListener {
-//                selectedCategory?.isSelected = false
-//                selectedCategory?.setTextColor(ContextCompat.getColor(this, R.color.dark_green))
-//
-//                button.isSelected = true
-//                button.setTextColor(ContextCompat.getColor(this, android.R.color.white))
-//                selectedCategory = button
-//
-//                val category = button.text.toString()
-//                val filtered = allArticles.filter { it.tags?.contains(category, ignoreCase = true) == true }
-//                adapter.updateList(filtered)
-//            }
-//        }
-//    }
 }

@@ -3,8 +3,6 @@ package com.example.loomi
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -14,6 +12,7 @@ import com.example.loomi.databinding.ActivityContentBinding
 import com.example.loomi.ui.content.ExplanationFragment
 import com.example.loomi.ui.content.FillInBlankFragment
 import com.example.loomi.ui.content.MultipleChoiceFragment
+import com.example.loomi.utils.ProgressManager
 import kotlin.jvm.java
 
 class ContentActivity : AppCompatActivity() {
@@ -39,7 +38,13 @@ class ContentActivity : AppCompatActivity() {
                 currentIndex++
                 showCurrentContent()
             } else {
+                val sectionId = intent.getIntExtra("SECTION_ID", 0)
+                val materialId = intent.getStringExtra("MATERIAL_ID") ?: ""
+                ProgressManager.markSectionCompleted(this, sectionId)
+
                 val intent = Intent(this, FinishActivity::class.java)
+                intent.putExtra("SECTION_ID", sectionId)
+                intent.putExtra("MATERIAL_ID", materialId)
                 startActivity(intent)
                 finish()
             }
@@ -50,19 +55,26 @@ class ContentActivity : AppCompatActivity() {
         val content = contents[currentIndex]
         binding.tvContentTitle.text = content.title
 
+        binding.btnNext.visibility = View.GONE
+
         val fragment = when (content.type) {
             ContentType.EXPLANATION -> ExplanationFragment.newInstance(content)
             ContentType.DRAG_AND_DROP -> DragAndDropFragment.newInstance(content)
             ContentType.MULTIPLE_CHOICE -> MultipleChoiceFragment.newInstance(content)
-            ContentType.FILL_IN_THE_BLANK -> FillInBlankFragment.newInstance(content)
-
+            ContentType.FILL_IN_BLANK -> FillInBlankFragment.newInstance(content)
         }
-
-
         supportFragmentManager.beginTransaction()
             .replace(R.id.contentContainer, fragment)
             .commit()
 
-        binding.btnNext.text = if (currentIndex == contents.size - 1) "Selesai" else "Materi selanjutnya"
+        binding.btnNext.text = if (currentIndex == contents.size - 1) "Selesai" else "Lanjut"
+        val progress = ((currentIndex + 1).toFloat() / contents.size * 100).toInt()
+        binding.progressBar.progress = progress
+    }
+    fun showBtnNext() {
+        binding.btnNext.visibility = View.VISIBLE
+    }
+    fun hideBtnNext() {
+        binding.btnNext.visibility = View.GONE
     }
 }

@@ -56,7 +56,7 @@ class MaterialFragment : Fragment() {
     private fun setupObserver() {
         viewModel = ViewModelProvider(this)[MaterialViewModel::class.java]
         viewModel.materials.observe(viewLifecycleOwner) { materials ->
-            showLoading(false) // Sembunyikan loading setelah data didapat
+            showLoading(false)
             adapter = MaterialAdapter(materials) { material ->
                 val intent = Intent(requireContext(), DetailMaterialActivity::class.java)
                 intent.putExtra("MATERIAL_DATA", material)

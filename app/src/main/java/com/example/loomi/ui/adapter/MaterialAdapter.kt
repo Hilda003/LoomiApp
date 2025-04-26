@@ -28,8 +28,9 @@ class MaterialAdapter(
                 .placeholder(R.drawable.article1)
                 .into(binding.courseImg)
 
-            binding.tvCompletion.text = "${item.sections.count { !it.isLocked }}/${item.sections.size}"
-
+            val done = item.sections.count { it.isCompleted }
+            val total = item.sections.size
+            binding.tvCompletion.text = "$done/$total Selesai"
             binding.root.setOnClickListener {
                 onItemClick(item)
             }

@@ -11,6 +11,7 @@ import java.util.UUID
 data class Section(
     val id: Int = 0,
     val title: String = "",
-    val isLocked: Boolean = true,
+    var isLocked: Boolean = true,
+    var isCompleted: Boolean = false,
     val content : List<Content> = emptyList(),
 ) : Parcelable

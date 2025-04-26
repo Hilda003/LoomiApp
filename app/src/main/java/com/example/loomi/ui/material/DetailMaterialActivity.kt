@@ -33,11 +33,9 @@ class DetailMaterialActivity : AppCompatActivity() {
         binding.tvTitle.text = material.title
         Glide.with(this).load(material.imgResId).into(binding.imgBanner)
 
-        val adapter = DetailMaterialAdapter(material.sections)
+        val adapter = DetailMaterialAdapter(material.id.toString(), material.sections)
         binding.rvMaterials.layoutManager = LinearLayoutManager(this)
         binding.rvMaterials.adapter = adapter
-        binding.btnBack.setOnClickListener {
-            finish()
-        }
+
     }
 }
