@@ -40,34 +40,46 @@ class ExplanationFragment : Fragment() {
         textChunks = content.descriptionList
         showCurrentChunk()
 
-        val tapListener = View.OnClickListener {
+        binding.tvTapToContinue.setOnClickListener {
             if (currentChunkIndex < textChunks.size - 1) {
                 currentChunkIndex++
                 showCurrentChunk()
             }
         }
-
-        binding.tvTapToContinue.setOnClickListener(tapListener)
-
         return binding.root
     }
 
     private fun showCurrentChunk() {
-        binding.tvExplanation.text = textChunks[currentChunkIndex]
+        if (currentChunkIndex == 0) {
+            binding.tvExplanation.text = textChunks[currentChunkIndex]
+        } else {
+            binding.tvExplanation.append("\n\n${textChunks[currentChunkIndex]}")
+        }
 
         if (currentChunkIndex < textChunks.size - 1) {
             binding.tvTapToContinue.visibility = View.VISIBLE
-            (activity as? ContentActivity)?.hideBtnNext()
+            (activity as? ContentActivity)?.setButtonState(
+                isEnabled = false,
+                text = "Tap untuk melanjutkan",
+                showButton = false
+            )
         } else {
             binding.tvTapToContinue.visibility = View.GONE
-            (activity as? ContentActivity)?.showBtnNext()
+            (activity as? ContentActivity)?.setButtonState(
+                isEnabled = true,
+                text = if ((activity as? ContentActivity)?.isLastContent() == true) "Selesai" else "Lanjut",
+                showButton = true
+            )
         }
+
     }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
 }
+
 
 
 

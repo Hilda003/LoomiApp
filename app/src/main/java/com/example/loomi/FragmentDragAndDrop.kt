@@ -1,10 +1,10 @@
 package com.example.loomi
 
 import android.content.ClipData
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.DragEvent
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,10 +12,10 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.fragment.app.Fragment
 import com.example.loomi.data.model.Content
 import com.example.loomi.databinding.FragmentDragAndDropBinding
-
-
+import com.example.loomi.BottomSheetResult
 
 class DragAndDropFragment : Fragment() {
 
@@ -23,16 +23,18 @@ class DragAndDropFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val answers = mutableListOf<String?>()
+    private var correctAnswers: List<String> = emptyList()
+    private var hasAnsweredCorrectly = false
 
     companion object {
         private const val ARG_CONTENT = "arg_content"
 
         fun newInstance(content: Content): DragAndDropFragment {
-            val fragment = DragAndDropFragment()
-            val args = Bundle()
-            args.putParcelable(ARG_CONTENT, content)
-            fragment.arguments = args
-            return fragment
+            return DragAndDropFragment().apply {
+                arguments = Bundle().apply {
+                    putParcelable(ARG_CONTENT, content)
+                }
+            }
         }
     }
 
@@ -48,38 +50,39 @@ class DragAndDropFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val content = arguments?.getParcelable<Content>(ARG_CONTENT)
-        Log.d("DragAndDropFragment", "Received content: $content")
-
         if (content == null) {
-            Log.e("DragAndDropFragment", "Content is null!")
             return
         }
 
-        val questionText = content.description ?: ""
-        val choices = content.choices.orEmpty()
-        val correctAnswers = content.correctAnswer?.split(",")?.map { it.trim() }.orEmpty()
+        binding.tvQuestionText.text = content.description ?: ""
+        binding.tvQuestionText.setTextColor(Color.BLACK)
 
-        binding.tvQuestionText.text = questionText
+        correctAnswers = content.correctAnswer.orEmpty()
+
         answers.clear()
-        val placeholders = mutableListOf<TextView>()
         repeat(correctAnswers.size) { i ->
             answers.add(null)
             val slot = createPlaceholderSlot(i)
             binding.answerContainer.addView(slot)
-            placeholders.add(slot)
         }
 
-        // Create option views
         val optionViews = mutableListOf<View>()
-        choices.forEach { item ->
-            val option = createDraggableOption(item).apply {
-                id = View.generateViewId()
-            }
+        content.choices.orEmpty().forEach { item ->
+            val option = createDraggableOption(item).apply { id = View.generateViewId() }
             binding.optionsRoot.addView(option)
             optionViews.add(option)
         }
 
         binding.optionsFlow.referencedIds = optionViews.map { it.id }.toIntArray()
+        (activity as? ContentActivity)?.setButtonState(false, "Cek Hasil", true)
+
+        (activity as? ContentActivity)?.binding?.btnNext?.setOnClickListener {
+            if (hasAnsweredCorrectly) {
+                (activity as? ContentActivity)?.moveToNextPage()
+            } else {
+                checkAnswer()
+            }
+        }
     }
 
     private fun createPlaceholderSlot(index: Int): TextView {
@@ -88,7 +91,7 @@ class DragAndDropFragment : Fragment() {
             setBackgroundResource(R.drawable.bg_placeholder)
             setPadding(24, 16, 24, 16)
             textSize = 16f
-            setTextColor(android.graphics.Color.BLACK)
+            setTextColor(Color.BLACK)
             layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
@@ -100,12 +103,14 @@ class DragAndDropFragment : Fragment() {
 
                     target.text = dragged.text
                     target.setBackgroundResource(R.drawable.bg_filled_slot)
+                    target.setTextColor(Color.BLACK)
+
                     dragged.visibility = View.GONE
 
                     answers[index] = dragged.text.toString()
 
                     if (answers.all { it != null }) {
-                        validateAnswers()
+                        (activity as? ContentActivity)?.setButtonState(true, "Cek Hasil", true)
                     }
                 }
                 true
@@ -119,7 +124,7 @@ class DragAndDropFragment : Fragment() {
             setBackgroundResource(R.drawable.bg_options)
             setPadding(24, 16, 24, 16)
             textSize = 16f
-            setTextColor(android.graphics.Color.WHITE)
+            setTextColor(Color.BLACK)
             layoutParams = ConstraintLayout.LayoutParams(
                 ConstraintLayout.LayoutParams.WRAP_CONTENT,
                 ConstraintLayout.LayoutParams.WRAP_CONTENT
@@ -134,19 +139,24 @@ class DragAndDropFragment : Fragment() {
         }
     }
 
-    private fun validateAnswers() {
-        val correctAnswers = arguments?.getParcelable<Content>(ARG_CONTENT)
-            ?.correctAnswer?.split(",")?.map { it.trim() } ?: return
+    private fun checkAnswer() {
+        if (answers.contains(null)) return
 
-        val isCorrect = correctAnswers == answers.map { it ?: "" }
+        val isCorrect = answers.filterNotNull() == correctAnswers
 
-        val message = if (isCorrect) "Yeay, jawaban kamu benar! 🎉" else "Ups, masih salah 😢"
+        if (isCorrect) {
+            hasAnsweredCorrectly = true
+            (activity as? ContentActivity)?.setAnswerCorrect(true)
 
-        AlertDialog.Builder(requireContext())
-            .setTitle("Hasil")
-            .setMessage(message)
-            .setPositiveButton("OK") { dialog, _ -> dialog.dismiss() }
-            .show()
+            val bottomSheet = BottomSheetResult.newInstance(true) {
+                (activity as? ContentActivity)?.moveToNextPage()
+            }
+            bottomSheet.show(parentFragmentManager, "BottomSheetResult")
+
+        } else {
+            val bottomSheet = BottomSheetResult.newInstance(false)
+            bottomSheet.show(parentFragmentManager, "BottomSheetResult")
+        }
     }
 
     override fun onDestroyView() {

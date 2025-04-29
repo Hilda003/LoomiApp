@@ -8,4 +8,6 @@
     <color name="background">#D9D9D9</color>
     <color name="green_50">#4F6F52</color>
     <color name="yellow">#ECE3CE</color>
+    <color name="active_button">#3A4D39</color>
+    <color name="disabled_button">#E0E0E0</color>
 </resources>

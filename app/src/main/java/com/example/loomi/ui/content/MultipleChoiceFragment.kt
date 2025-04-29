@@ -1,14 +1,16 @@
 package com.example.loomi.ui.content
 
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.RadioButton
-import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
+import com.example.loomi.ContentActivity
 import com.example.loomi.data.model.Content
 import com.example.loomi.databinding.FragmentMultipleChoiceBinding
+import com.example.loomi.BottomSheetResult
 
 class MultipleChoiceFragment : Fragment() {
 
@@ -16,6 +18,9 @@ class MultipleChoiceFragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var content: Content
+    private var selectedAnswer: String? = null
+    private var correctAnswer: String? = null
+    private var hasAnsweredCorrectly = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,38 +41,57 @@ class MultipleChoiceFragment : Fragment() {
         binding.tvCode.text = content.code ?: ""
         binding.tvQuestion.text = content.question ?: ""
         binding.tvQuestion.textSize = 16f
+        binding.tvQuestion.setTextColor(Color.BLACK)
 
-        val choices = content.choices ?: listOf()
-        val correctAnswer = content.correctAnswer
+        val choices = content.choices ?: emptyList()
+        correctAnswer = content.correctAnswer?.firstOrNull()
 
         choices.forEach { choice ->
             val radioButton = RadioButton(requireContext()).apply {
                 text = choice
                 id = View.generateViewId()
                 textSize = 14f
+                setTextColor(Color.BLACK)
             }
             binding.rgChoices.addView(radioButton)
         }
 
+        (activity as? ContentActivity)?.setButtonState(false, "Cek Hasil")
+
         binding.rgChoices.setOnCheckedChangeListener { group, checkedId ->
             val selectedRadioButton = group.findViewById<RadioButton>(checkedId)
-            val selectedAnswer = selectedRadioButton?.text.toString()
+            selectedAnswer = selectedRadioButton?.text.toString()
+            (activity as? ContentActivity)?.setButtonState(true, "Cek Hasil")
+        }
 
-            val message = if (selectedAnswer == correctAnswer) {
-                "Jawaban kamu benar 🎉"
+        (activity as? ContentActivity)?.binding?.btnNext?.setOnClickListener {
+            if (selectedAnswer.isNullOrEmpty()) return@setOnClickListener
+
+            if (hasAnsweredCorrectly) {
+                (activity as? ContentActivity)?.moveToNextPage()
             } else {
-                "Jawaban kamu salah 😢\nJawaban yang benar: $correctAnswer"
-
+                checkAnswer()
             }
-
-            AlertDialog.Builder(requireContext())
-                .setTitle("Hasil Jawaban")
-                .setMessage(message)
-                .setPositiveButton("OK", null)
-                .show()
         }
     }
 
+    private fun checkAnswer() {
+        val isCorrect = selectedAnswer == correctAnswer
+
+        if (isCorrect) {
+            hasAnsweredCorrectly = true
+            (activity as? ContentActivity)?.setAnswerCorrect(true)
+
+            val bottomSheet = BottomSheetResult.newInstance(true) {
+                (activity as? ContentActivity)?.moveToNextPage()
+            }
+            bottomSheet.show(parentFragmentManager, "BottomSheetResult")
+
+        } else {
+            val bottomSheet = BottomSheetResult.newInstance(false)
+            bottomSheet.show(parentFragmentManager, "BottomSheetResult")
+        }
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()
@@ -76,11 +100,11 @@ class MultipleChoiceFragment : Fragment() {
 
     companion object {
         fun newInstance(content: Content): MultipleChoiceFragment {
-            val fragment = MultipleChoiceFragment()
-            fragment.arguments = Bundle().apply {
-                putParcelable("content", content)
+            return MultipleChoiceFragment().apply {
+                arguments = Bundle().apply {
+                    putParcelable("content", content)
+                }
             }
-            return fragment
         }
     }
 }

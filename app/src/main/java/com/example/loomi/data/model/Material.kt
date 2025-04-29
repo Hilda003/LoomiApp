@@ -8,7 +8,7 @@ import kotlinx.parcelize.Parcelize
 @IgnoreExtraProperties
 @Parcelize
 data class Material(
-    val id: String = "",
+    val id: Int = 0,
     val title: String = "",
     val imgResId: String? = "",
     val sections: List<Section> = emptyList()

@@ -11,11 +11,12 @@ import java.util.UUID
 data class Content(
     val title: String = "",
     val description: String = "",
+    val descriptionList: List<String> = emptyList(),
     val url: String = "",
     val type: ContentType = ContentType.EXPLANATION,
     val choices: List<String>? = null,
     val code: String? = null,
-    val correctAnswer: String? = null,
+    val correctAnswer: List<String>? = null,
     val drag: String? = null,
     val text: String? = null,
     val question: String? = null
@@ -23,7 +24,7 @@ data class Content(
 
 enum class ContentType {
     EXPLANATION,
-    FILL_IN_THE_BLANK,
+//    FILL_IN_BLANK,
     DRAG_AND_DROP,
     MULTIPLE_CHOICE;
 

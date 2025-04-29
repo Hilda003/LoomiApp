@@ -133,17 +133,17 @@ class MaterialViewModel : ViewModel() {
                     descriptionList = descriptionList
                 )
             }
-            ContentType.FILL_IN_BLANK -> {
-                val dataMap = raw["data"] as? Map<*, *> ?: return null
-
-                Content(
-                    type = type,
-                    title = title,
-                    description = dataMap["text"] as? String ?: "",
-                    code = dataMap["code"] as? String,
-                    correctAnswer = (dataMap["correctAnswer"] as? List<*>)?.mapNotNull { it?.toString() }
-                )
-            }
+//            ContentType.FILL_IN_BLANK -> {
+//                val dataMap = raw["data"] as? Map<*, *> ?: return null
+//
+//                Content(
+//                    type = type,
+//                    title = title,
+//                    description = dataMap["text"] as? String ?: "",
+//                    code = dataMap["code"] as? String,
+//                    correctAnswer = (dataMap["correctAnswer"] as? List<*>)?.mapNotNull { it?.toString() }
+//                )
+//            }
 
             ContentType.MULTIPLE_CHOICE -> {
                 val dataMap = raw["data"] as? Map<*, *> ?: return null
