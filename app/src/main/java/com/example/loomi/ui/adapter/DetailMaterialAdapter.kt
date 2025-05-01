@@ -31,7 +31,7 @@ class DetailMaterialAdapter(
             binding.tvNumber.text = section.id.toString()
             binding.tvMaterialTitle.text = section.title
             binding.icLock.setImageResource(
-                if (section.isLocked) R.drawable.ic_lock else R.drawable.ic_unlock
+                if (section.isLocked) R.drawable.ic_lock else R.drawable.ic_lock_open
             )
 
             binding.root.setOnClickListener {
