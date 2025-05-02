@@ -16,7 +16,7 @@ class RegisterViewModel : ViewModel() {
 
     fun registerUser(name: String, email: String, password: String) {
         if (email.isEmpty() || password.isEmpty() || name.isEmpty()) {
-            _registerState.value = State.Error("Please fill in all fields")
+            _registerState.value = State.Error("Email dan password tidak boleh kosong")
             return
         }
 
@@ -33,13 +33,24 @@ class RegisterViewModel : ViewModel() {
                     user?.updateProfile(profileUpdates)
                         ?.addOnCompleteListener { updateTask ->
                             if (updateTask.isSuccessful) {
-                                _registerState.value = State.Success("Register Success!")
+                                _registerState.value = State.Success("Register sukses!")
                             } else {
-                                _registerState.value = State.Error(updateTask.exception?.message ?: "Failed to update profile")
+                                _registerState.value = State.Error(
+                                    updateTask.exception?.message ?: "Gagal memperbarui profil"
+                                )
                             }
                         }
                 } else {
-                    _registerState.value = State.Error(task.exception?.message ?: "Register Failed")
+                    val exception = task.exception
+                    val message = when {
+                        exception?.message?.contains("email sudah digunakan", true) == true -> {
+                            "Email sudah digunakan. Silakan gunakan email lain."
+                        }
+                        else -> {
+                            exception?.message ?: "Register gagal. Silakan coba lagi."
+                        }
+                    }
+                    _registerState.value = State.Error(message)
                 }
             }
     }

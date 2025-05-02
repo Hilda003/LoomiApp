@@ -7,6 +7,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.loomi.utils.State
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
+import com.google.firebase.auth.FirebaseAuthInvalidUserException
 
 
 class LoginViewModel : ViewModel() {
@@ -17,7 +19,7 @@ class LoginViewModel : ViewModel() {
 
     fun loginUser(email: String, password: String) {
         if (email.isEmpty() || password.isEmpty()) {
-            _loginState.value = State.Error("Please enter email and password")
+            _loginState.value = State.Error("Email dan password tidak boleh kosong")
             return
         }
 
@@ -26,10 +28,20 @@ class LoginViewModel : ViewModel() {
         auth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    _loginState.value = State.Success("Login successful!")
+                    _loginState.value = State.Success("Login berhasil!")
                 } else {
-                    _loginState.value = State.Error(task.exception?.message ?: "Login failed")
+                    val errorMessage = when (task.exception) {
+                        is FirebaseAuthInvalidUserException,
+                        is FirebaseAuthInvalidCredentialsException -> {
+                            "Email atau password salah"
+                        }
+                        else -> {
+                            "Terjadi kesalahan. Silakan coba lagi nanti"
+                        }
+                    }
+                    _loginState.value = State.Error(errorMessage)
                 }
             }
+
     }
 }

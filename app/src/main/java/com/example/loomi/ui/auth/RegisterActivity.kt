@@ -46,11 +46,35 @@ class RegisterActivity : AppCompatActivity() {
             val password = binding.etPassword.editText?.text.toString().trim()
             val agreeTerms = binding.checkbox.isChecked
 
-            if (!agreeTerms) {
-                Toast.makeText(this, "You must agree with the terms and conditions", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
+            var isValid = true
+            binding.etUsername.error = null
+            binding.etEmail.error = null
+            binding.etPassword.error = null
+
+            if (name.isEmpty()) {
+                binding.etUsername.error = "Nama tidak boleh kosong"
+                isValid = false
             }
 
+            if (email.isEmpty()) {
+                binding.etEmail.error = "Email tidak boleh kosong"
+                isValid = false
+            }
+
+            if (password.isEmpty()) {
+                binding.etPassword.error = "Password tidak boleh kosong"
+                isValid = false
+            } else if (password.length < 6) {
+                    binding.etPassword.error = "Password minimal 6 karakter"
+                isValid = false
+            }
+
+            if (!isValid) return@setOnClickListener
+
+            if (!agreeTerms) {
+                Toast.makeText(this, "Harap setujui syarat dan ketentuan", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
             viewModel.registerUser(name, email, password)
         }
 
@@ -58,6 +82,7 @@ class RegisterActivity : AppCompatActivity() {
             startActivity(Intent(this, LoginActivity::class.java))
         }
     }
+
 
     private fun observeViewModel() {
         viewModel.registerState.observe(this) { state ->
@@ -71,7 +96,7 @@ class RegisterActivity : AppCompatActivity() {
 
                     val currentUser = FirebaseAuth.getInstance().currentUser
                     currentUser?.let { user ->
-                        assignRandomProfilePhoto(user)
+                        assignInitialProfilePhoto(user)
                     }
 
                     startActivity(Intent(this, MainActivity::class.java))
@@ -79,15 +104,29 @@ class RegisterActivity : AppCompatActivity() {
                 }
                 is State.Error -> {
                     binding.progressBar.visibility = View.GONE
-                    Toast.makeText(this, state.message, Toast.LENGTH_LONG).show()
+                    val message = when {
+                        state.message.contains("email address is already in use", ignoreCase = true) -> {
+                            "Email sudah digunakan. Silakan gunakan email lain."
+                        }
+                        state.message.contains("network error", ignoreCase = true) -> {
+                            "Terjadi masalah jaringan. Silakan coba lagi."
+                        }
+                        else -> {
+                            "Registrasi gagal: ${state.message}"
+                        }
+                    }
+
+                    Toast.makeText(this, message, Toast.LENGTH_LONG).show()
                 }
+
             }
         }
     }
 
-    private fun assignRandomProfilePhoto(user: FirebaseUser) {
-        val randomNumber = (1..70).random()
-        val photoUrl = "https://i.pravatar.cc/150?img=$randomNumber"
+    private fun assignInitialProfilePhoto(user: FirebaseUser) {
+        val email = user.email ?: return
+        val initial = email.first().uppercaseChar()
+        val photoUrl = "https://ui-avatars.com/api/?name=$initial&background=random&color=ffffff"
 
         val profileUpdates = UserProfileChangeRequest.Builder()
             .setPhotoUri(photoUrl.toUri())
@@ -96,11 +135,12 @@ class RegisterActivity : AppCompatActivity() {
         user.updateProfile(profileUpdates)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    Log.d("RegisterActivity", "Random profile photo assigned successfully")
+                    Log.d("RegisterActivity", "Initial-based profile photo assigned successfully")
                 } else {
                     Log.e("RegisterActivity", "Failed to assign profile photo", task.exception)
                 }
             }
     }
+
 }
 

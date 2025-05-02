@@ -52,6 +52,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:hintTextColor="@color/black"
+            android:inputType="textEmailAddress"
+            android:maxLines="1"
             style="@style/PoppinsRegular" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -76,6 +78,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:hintTextColor="@color/black"
+            android:maxLines="1"
             style="@style/PoppinsRegular"
             android:inputType="textPassword"/>
     </com.google.android.material.textfield.TextInputLayout>
