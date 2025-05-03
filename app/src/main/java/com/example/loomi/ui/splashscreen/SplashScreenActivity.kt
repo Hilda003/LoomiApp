@@ -20,8 +20,6 @@ import com.example.loomi.ui.auth.RegisterActivity
 import com.example.loomi.ui.onboarding.OnBoardingActivity
 import kotlin.jvm.java
 
-
-// SplashScreenActivity.kt
 @SuppressLint("CustomSplashScreen")
 class SplashScreenActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySplashScreenBinding

@@ -2,16 +2,17 @@ package com.example.loomi
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.navigation.findNavController
 import com.example.loomi.data.model.Content
 import com.example.loomi.data.model.ContentType
 import com.example.loomi.databinding.ActivityContentBinding
+import com.example.loomi.ui.content.DragAndDropFragment
 import com.example.loomi.ui.content.ExplanationFragment
 import com.example.loomi.ui.content.MultipleChoiceFragment
 import com.example.loomi.utils.ProgressManager
@@ -42,7 +43,13 @@ class ContentActivity : AppCompatActivity() {
         })
 
 
-        contents = intent.getParcelableArrayListExtra("CONTENT_DATA") ?: emptyList()
+        contents = (intent.getParcelableArrayListExtra<Content>("CONTENT_DATA") ?: emptyList()).sortedBy {
+            when (it.type) {
+                ContentType.EXPLANATION -> 0
+                ContentType.DRAG_AND_DROP -> 1
+                ContentType.MULTIPLE_CHOICE -> 2
+            }
+        }
         showCurrentContent()
         binding.btnNext.setOnClickListener {
             val content = contents[currentIndex]

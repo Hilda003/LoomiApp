@@ -11,6 +11,8 @@ import com.example.loomi.ContentActivity
 import com.example.loomi.data.model.Content
 import com.example.loomi.databinding.FragmentMultipleChoiceBinding
 import com.example.loomi.BottomSheetResult
+import com.example.loomi.R
+import com.example.loomi.utils.unescapeJava
 
 class MultipleChoiceFragment : Fragment() {
 
@@ -38,7 +40,7 @@ class MultipleChoiceFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.tvCode.text = content.code ?: ""
+        binding.tvCode.text = content.code?.unescapeJava() ?: ""
         binding.tvQuestion.text = content.question ?: ""
         binding.tvQuestion.textSize = 16f
         binding.tvQuestion.setTextColor(Color.BLACK)
@@ -47,14 +49,13 @@ class MultipleChoiceFragment : Fragment() {
         correctAnswer = content.correctAnswer?.firstOrNull()
 
         choices.forEach { choice ->
-            val radioButton = RadioButton(requireContext()).apply {
-                text = choice
-                id = View.generateViewId()
-                textSize = 14f
-                setTextColor(Color.BLACK)
-            }
+            val radioButton = LayoutInflater.from(requireContext())
+                .inflate(R.layout.item_radio_choice, binding.rgChoices, false) as RadioButton
+            radioButton.text = choice
+            radioButton.id = View.generateViewId()
             binding.rgChoices.addView(radioButton)
         }
+
 
         (activity as? ContentActivity)?.setButtonState(false, "Cek Hasil")
 
