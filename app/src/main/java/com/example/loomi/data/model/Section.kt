@@ -9,7 +9,8 @@ import java.util.UUID
 @IgnoreExtraProperties
 @Parcelize
 data class Section(
-    val id: Int = 0,
+    val docId: String = "",
+    val order: Int = 0,
     val title: String = "",
     var isLocked: Boolean = true,
     var isCompleted: Boolean = false,

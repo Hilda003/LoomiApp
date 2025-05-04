@@ -8,6 +8,7 @@ import com.example.loomi.data.model.Content
 import com.example.loomi.data.model.ContentType
 import com.example.loomi.data.model.Material
 import com.example.loomi.data.model.Section
+import com.example.loomi.data.model.UserProgress
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.firestore.FirebaseFirestore
 
@@ -36,17 +37,17 @@ class MaterialViewModel : ViewModel() {
                 }
 
                 snapshot.documents.forEach { doc ->
-                    val raw = doc.data ?: emptyMap<String, Any>()
-
-                    val id = (raw["id"] as? Long)?.toInt() ?: 0
+                    val raw = doc.data ?: return@forEach
+                    val order = (raw["order"] as? Long)?.toInt() ?: 0
                     val title = raw["title"] as? String ?: ""
                     val imgResId = raw["imgResId"] as? String ?: ""
 
                     val baseMaterial = Material(
-                        id = id,
+                        order = order,
                         title = title,
                         imgResId = imgResId,
-                        sections = emptyList()
+                        sections = emptyList(),
+                        docId = doc.id
                     )
 
                     fetchSections(doc.id) { sections ->
@@ -55,7 +56,7 @@ class MaterialViewModel : ViewModel() {
 
                         completedTasks++
                         if (completedTasks == totalTasks) {
-                            _materials.value = materialList.sortedBy { it.id }
+                            _materials.value = materialList.sortedBy { it.order }
                         }
                     }
                 }
@@ -73,7 +74,7 @@ class MaterialViewModel : ViewModel() {
             .addOnSuccessListener { sectionSnap ->
                 val sectionTasks = sectionSnap.map { sectionDoc ->
                     val raw = sectionDoc.data
-                    val id = (raw["id"] as? Long)?.toInt() ?: 0
+                    val order = (raw["order"] as? Long)?.toInt() ?: 0
                     val title = raw["title"] as? String ?: ""
                     val isLocked = raw["isLocked"] as? Boolean ?: true
                     val isCompleted = raw["isCompleted"] as? Boolean ?: false
@@ -90,18 +91,19 @@ class MaterialViewModel : ViewModel() {
                             } ?: emptyList()
 
                             Section(
-                                id = id,
+                                order = order,
                                 title = title,
                                 isLocked = isLocked,
                                 isCompleted = isCompleted,
-                                content = contentList
+                                content = contentList,
+                                docId = sectionDoc.id
                             )
                         }
                 }
 
                 Tasks.whenAllSuccess<Section>(sectionTasks)
                     .addOnSuccessListener { sectionList ->
-                        callback(sectionList)
+                        callback(sectionList.sortedBy { it.order })
                     }
                     .addOnFailureListener {
                         Log.e("MaterialViewModel", "Failed to fetch sections with content", it)
@@ -113,7 +115,6 @@ class MaterialViewModel : ViewModel() {
                 callback(emptyList())
             }
     }
-
     private fun parseContent(raw: Map<String, Any>): Content? {
         val typeStr = raw["type"] as? String ?: return null
         val type = ContentType.fromString(typeStr)

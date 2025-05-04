@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -36,21 +37,22 @@ class ContentActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-        onBackPressedDispatcher.addCallback(this@ContentActivity, object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                showExitConfirmationDialog()
+        contents = (intent.getParcelableArrayListExtra<Content>("CONTENT_DATA") ?: emptyList())
+            .sortedBy {
+                when (it.type) {
+                    ContentType.EXPLANATION -> 0
+                    ContentType.DRAG_AND_DROP -> 1
+                    ContentType.MULTIPLE_CHOICE -> 2
+                }
             }
-        })
+//        if (contents.isEmpty()) {
+//            Toast.makeText(this, "Konten tidak tersedia", Toast.LENGTH_SHORT).show()
+//            finish()
+//            return
+//        }
 
-
-        contents = (intent.getParcelableArrayListExtra<Content>("CONTENT_DATA") ?: emptyList()).sortedBy {
-            when (it.type) {
-                ContentType.EXPLANATION -> 0
-                ContentType.DRAG_AND_DROP -> 1
-                ContentType.MULTIPLE_CHOICE -> 2
-            }
-        }
         showCurrentContent()
+
         binding.btnNext.setOnClickListener {
             val content = contents[currentIndex]
             when (content.type) {
@@ -60,6 +62,7 @@ class ContentActivity : AppCompatActivity() {
                 }
             }
         }
+
         binding.icBack.setOnClickListener {
             if (currentIndex > 0) {
                 currentIndex--
@@ -68,7 +71,6 @@ class ContentActivity : AppCompatActivity() {
                 showExitConfirmationDialog()
             }
         }
-
     }
 
     private fun showCurrentContent() {
@@ -99,12 +101,12 @@ class ContentActivity : AppCompatActivity() {
         binding.icBack.visibility = if (currentIndex == 0) View.GONE else View.VISIBLE
     }
 
-    fun moveToNextPage() {
+    internal fun moveToNextPage() {
         if (currentIndex < contents.size - 1) {
             currentIndex++
             showCurrentContent()
         } else {
-            val sectionId = intent.getIntExtra("SECTION_ID", 0)
+            val sectionId = intent.getStringExtra("SECTION_ID") ?: ""
             val materialId = intent.getStringExtra("MATERIAL_ID") ?: ""
             ProgressManager.markSectionCompleted(this, sectionId)
 
@@ -130,10 +132,6 @@ class ContentActivity : AppCompatActivity() {
             visibility = if (showButton) View.VISIBLE else View.GONE
             this.isEnabled = isEnabled
             this.text = text
-
-            val backgroundColorRes = if (isEnabled) R.color.active_button else R.color.disabled_button
-            setBackgroundColor(ContextCompat.getColor(context, backgroundColorRes))
-            setTextColor(ContextCompat.getColor(context, android.R.color.white))
         }
     }
 
