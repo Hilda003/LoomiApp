@@ -1,37 +1,27 @@
 package com.example.loomi.ui.profile
 
 import android.content.Context
-import com.example.loomi.ui.auth.LoginActivity
 import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
-import android.net.Uri
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.RadioButton
-import android.widget.RadioGroup
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.Fragment
-import com.example.loomi.databinding.FragmentProfileBinding
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.auth.UserProfileChangeRequest
-import androidx.core.net.toUri
 import com.bumptech.glide.Glide
 import com.example.loomi.R
 import com.example.loomi.databinding.DialogLanguageBinding
+import com.example.loomi.databinding.FragmentProfileBinding
+import com.example.loomi.ui.auth.LoginActivity
 import com.example.loomi.utils.LocaleHelper
-import java.util.Locale
-
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 
 class ProfileFragment : Fragment() {
 
@@ -48,9 +38,9 @@ class ProfileFragment : Fragment() {
         auth = FirebaseAuth.getInstance()
         sharedPreferences = requireContext().getSharedPreferences("settings", Context.MODE_PRIVATE)
 
-        displayUserInfo()
         setupLanguageToggle()
         setupLogoutButton()
+        displayUserInfo()
 
         return binding.root
     }
@@ -58,24 +48,33 @@ class ProfileFragment : Fragment() {
     private fun displayUserInfo() {
         val user = auth.currentUser
         if (user != null) {
-            binding.txtUsername.text = user.displayName ?: "No Name"
-            binding.txtEmail.text = user.email ?: "No Email"
-
-            val photoUrl = user.photoUrl
-            if (photoUrl != null) {
-                Glide.with(this)
-                    .load(photoUrl)
-                    .placeholder(R.drawable.circle_background)
-                    .into(binding.ivProfile)
-            } else {
-                val email = user.email ?: "?"
-                val initial = email.firstOrNull()?.uppercaseChar()?.toString() ?: "?"
-                binding.ivProfile.setImageBitmap(generateInitialBitmap(initial))
+            user.reload().addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    // Optional: show layout group if hidden
+                    binding.txtUsername.text = user.displayName ?: "No Name"
+                    binding.txtEmail.text = user.email ?: "No Email"
+                    loadProfileImage(user)
+                } else {
+                    Toast.makeText(requireContext(), "Gagal memuat data user", Toast.LENGTH_SHORT).show()
+                }
             }
         } else {
-//            Toast.makeText(requireContext(), "User not logged in", Toast.LENGTH_SHORT).show()
             startActivity(Intent(requireContext(), LoginActivity::class.java))
             requireActivity().finish()
+        }
+    }
+
+    private fun loadProfileImage(user: FirebaseUser) {
+        val photoUrl = user.photoUrl
+        if (photoUrl != null) {
+            Glide.with(this)
+                .load(photoUrl)
+                .placeholder(R.drawable.circle_background)
+                .into(binding.ivProfile)
+        } else {
+            val email = user.email.orEmpty()
+            val initial = email.firstOrNull()?.uppercase() ?: "?"
+            binding.ivProfile.setImageBitmap(generateInitialBitmap(initial))
         }
     }
 
@@ -103,18 +102,17 @@ class ProfileFragment : Fragment() {
         return bitmap
     }
 
-    private fun setupLanguageToggle() {
-        binding.btnLanguage.setOnClickListener {
-            showLanguageDialog()
-        }
-    }
-
     private fun setupLogoutButton() {
         binding.btnLogout.setOnClickListener {
             auth.signOut()
-            val intent = Intent(requireContext(), LoginActivity::class.java)
-            startActivity(intent)
+            startActivity(Intent(requireContext(), LoginActivity::class.java))
             requireActivity().finish()
+        }
+    }
+
+    private fun setupLanguageToggle() {
+        binding.btnLanguage.setOnClickListener {
+            showLanguageDialog()
         }
     }
 
@@ -137,7 +135,6 @@ class ProfileFragment : Fragment() {
                 }
 
                 sharedPreferences.edit().putString("app_lang", selectedLang).apply()
-
                 val context = LocaleHelper.setLocale(requireContext(), selectedLang)
                 val intent = Intent(context, requireActivity()::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
@@ -149,9 +146,9 @@ class ProfileFragment : Fragment() {
 
         dialog.show()
     }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
 }
-
