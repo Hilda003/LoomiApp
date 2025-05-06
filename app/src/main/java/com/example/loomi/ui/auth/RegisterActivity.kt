@@ -19,6 +19,7 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.UserProfileChangeRequest
 import androidx.core.net.toUri
 import com.google.firebase.auth.FirebaseAuth
+import kotlin.math.abs
 
 class RegisterActivity : AppCompatActivity() {
     private lateinit var binding: ActivityRegisterBinding
@@ -65,14 +66,15 @@ class RegisterActivity : AppCompatActivity() {
                 binding.etPassword.error = "Password tidak boleh kosong"
                 isValid = false
             } else if (password.length < 6) {
-                    binding.etPassword.error = "Password minimal 6 karakter"
+                binding.etPassword.error = "Password minimal 6 karakter"
                 isValid = false
             }
 
             if (!isValid) return@setOnClickListener
 
             if (!agreeTerms) {
-                Toast.makeText(this, "Harap setujui syarat dan ketentuan", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Harap setujui syarat dan ketentuan", Toast.LENGTH_SHORT)
+                    .show()
                 return@setOnClickListener
             }
             viewModel.registerUser(name, email, password)
@@ -90,6 +92,7 @@ class RegisterActivity : AppCompatActivity() {
                 is State.Loading -> {
                     binding.progressBar.visibility = View.VISIBLE
                 }
+
                 is State.Success -> {
                     binding.progressBar.visibility = View.GONE
                     Toast.makeText(this, state.data, Toast.LENGTH_SHORT).show()
@@ -102,15 +105,21 @@ class RegisterActivity : AppCompatActivity() {
                     startActivity(Intent(this, MainActivity::class.java))
                     finish()
                 }
+
                 is State.Error -> {
                     binding.progressBar.visibility = View.GONE
                     val message = when {
-                        state.message.contains("email address is already in use", ignoreCase = true) -> {
+                        state.message.contains(
+                            "email address is already in use",
+                            ignoreCase = true
+                        ) -> {
                             "Email sudah digunakan. Silakan gunakan email lain."
                         }
+
                         state.message.contains("network error", ignoreCase = true) -> {
                             "Terjadi masalah jaringan. Silakan coba lagi."
                         }
+
                         else -> {
                             "Registrasi gagal: ${state.message}"
                         }
@@ -126,7 +135,9 @@ class RegisterActivity : AppCompatActivity() {
     private fun assignInitialProfilePhoto(user: FirebaseUser) {
         val email = user.email ?: return
         val initial = email.first().uppercaseChar()
-        val photoUrl = "https://ui-avatars.com/api/?name=$initial&background=random&color=ffffff"
+        val backgroundColor = SOFT_BACKGROUND_COLORS.random()
+
+        val photoUrl = buildAvatarUrl(initial.toString(), backgroundColor, TEXT_COLOR)
 
         val profileUpdates = UserProfileChangeRequest.Builder()
             .setPhotoUri(photoUrl.toUri())
@@ -135,12 +146,38 @@ class RegisterActivity : AppCompatActivity() {
         user.updateProfile(profileUpdates)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    Log.d("RegisterActivity", "Initial-based profile photo assigned successfully")
+                    Log.d("RegisterActivity", "Soft-profile photo assigned successfully")
                 } else {
                     Log.e("RegisterActivity", "Failed to assign profile photo", task.exception)
                 }
             }
     }
 
-}
+    private fun buildAvatarUrl(
+        name: String,
+        background: String,
+        color: String
+    ): String {
+        return "https://ui-avatars.com/api/?" +
+                "name=$name" +
+                "&background=$background" +
+                "&color=$color" +
+                "&bold=true" +
+                "&size=$AVATAR_SIZE"
+    }
+        companion object {
 
+        private val SOFT_BACKGROUND_COLORS = listOf(
+            "f0f0f0",
+            "ffe9d6",
+            "e8e8f7",
+            "dbeafe",
+            "e0f7f1",
+            "f5f5dc"
+        )
+
+        private const val TEXT_COLOR = "555555"
+        private const val AVATAR_SIZE = 256
+    }
+
+}

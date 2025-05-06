@@ -12,7 +12,5 @@ data class Section(
     val docId: String = "",
     val order: Int = 0,
     val title: String = "",
-    var isLocked: Boolean = true,
-    var isCompleted: Boolean = false,
     val content : List<Content> = emptyList(),
 ) : Parcelable

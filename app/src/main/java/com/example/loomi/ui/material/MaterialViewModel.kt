@@ -10,6 +10,7 @@ import com.example.loomi.data.model.Material
 import com.example.loomi.data.model.Section
 import com.example.loomi.data.model.UserProgress
 import com.google.android.gms.tasks.Tasks
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 
 class MaterialViewModel : ViewModel() {
@@ -76,8 +77,8 @@ class MaterialViewModel : ViewModel() {
                     val raw = sectionDoc.data
                     val order = (raw["order"] as? Long)?.toInt() ?: 0
                     val title = raw["title"] as? String ?: ""
-                    val isLocked = raw["isLocked"] as? Boolean ?: true
-                    val isCompleted = raw["isCompleted"] as? Boolean ?: false
+//                    val isLocked = raw["isLocked"] as? Boolean ?: true
+//                    val isCompleted = raw["isCompleted"] as? Boolean ?: false
 
                     db.collection("materials")
                         .document(materialId)
@@ -93,8 +94,8 @@ class MaterialViewModel : ViewModel() {
                             Section(
                                 order = order,
                                 title = title,
-                                isLocked = isLocked,
-                                isCompleted = isCompleted,
+//                                isLocked = isLocked,
+//                                isCompleted = isCompleted,
                                 content = contentList,
                                 docId = sectionDoc.id
                             )
