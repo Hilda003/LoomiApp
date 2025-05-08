@@ -142,7 +142,7 @@
         android:layout_width="match_parent"
         android:layout_height="55dp"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="40dp"
         android:layout_marginEnd="32dp"
         android:backgroundTint="@color/green"
         android:text="@string/register"

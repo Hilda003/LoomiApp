@@ -8,23 +8,29 @@
     tools:context=".ui.content.ExplanationFragment">
 
 
-    <TextView
-        android:id="@+id/tvExplanation"
-        style="@style/PoppinsRegular"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:justificationMode="inter_word"
-        android:text="@string/lorem_ipsum"
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/tvTapToContinue"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:id="@+id/llExplanationContainer"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </ScrollView>
 
     <TextView
         android:id="@+id/tvTapToContinue"
-        style="@style/PoppinsRegular"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/tap_to_continue"
+        style="@style/PoppinsRegular"
         android:textColor="@color/dark_green"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
