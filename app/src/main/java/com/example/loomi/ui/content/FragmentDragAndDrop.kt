@@ -1,21 +1,21 @@
-package com.example.loomi
+package com.example.loomi.ui.content
 
 import android.content.ClipData
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.DragEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.appcompat.app.AlertDialog
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import com.example.loomi.data.model.Content
 import com.example.loomi.databinding.FragmentDragAndDropBinding
 import com.example.loomi.BottomSheetResult
+import com.example.loomi.ContentActivity
+import com.example.loomi.R
 
 class DragAndDropFragment : Fragment() {
 
@@ -84,7 +84,6 @@ class DragAndDropFragment : Fragment() {
             }
         }
     }
-
     private fun createPlaceholderSlot(index: Int): TextView {
         return TextView(requireContext()).apply {
             text = "___"
@@ -96,17 +95,20 @@ class DragAndDropFragment : Fragment() {
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
             ).apply { marginEnd = 16 }
+
+            var currentText: String? = null
             setOnDragListener { v, event ->
                 if (event.action == DragEvent.ACTION_DROP) {
                     val dragged = event.localState as? TextView ?: return@setOnDragListener true
                     val target = v as? TextView ?: return@setOnDragListener true
+                    currentText?.let { restoreChoiceToOptions(it) }
 
                     target.text = dragged.text
-                    target.setBackgroundResource(R.drawable.bg_filled_slot)
-                    target.setTextColor(Color.BLACK)
+                    currentText = dragged.text.toString()
+                    setBackgroundResource(R.drawable.bg_filled_slot)
+                    setTextColor(Color.BLACK)
 
                     dragged.visibility = View.GONE
-
                     answers[index] = dragged.text.toString()
 
                     if (answers.all { it != null }) {
@@ -115,7 +117,26 @@ class DragAndDropFragment : Fragment() {
                 }
                 true
             }
+            setOnClickListener {
+                if (text != "___") {
+                    restoreChoiceToOptions(currentText)
+                    text = "___"
+                    setBackgroundResource(R.drawable.bg_placeholder)
+                    currentText = null
+                    answers[index] = null
+                    (activity as? ContentActivity)?.setButtonState(false, "Cek Hasil", true)
+                }
+            }
         }
+    }
+    private fun restoreChoiceToOptions(text: String?) {
+        if (text == null) return
+
+        val option = createDraggableOption(text).apply { id = View.generateViewId() }
+        binding.optionsRoot.addView(option)
+        val ids = binding.optionsFlow.referencedIds.toMutableList()
+        ids.add(option.id)
+        binding.optionsFlow.referencedIds = ids.toIntArray()
     }
 
     private fun createDraggableOption(text: String): TextView {
