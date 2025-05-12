@@ -15,17 +15,20 @@ import com.example.loomi.data.model.ContentType
 import com.example.loomi.databinding.ActivityContentBinding
 import com.example.loomi.ui.content.DragAndDropFragment
 import com.example.loomi.ui.content.ExplanationFragment
+import com.example.loomi.ui.content.ExplanationFragment.OnExplanationPageCompleteListener
 import com.example.loomi.ui.content.MultipleChoiceFragment
-import com.example.loomi.utils.ProgressManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlin.jvm.java
 
-class ContentActivity : AppCompatActivity() {
+class ContentActivity : AppCompatActivity(), ExplanationFragment.OnExplanationPageCompleteListener  {
 
     internal lateinit var binding: ActivityContentBinding
     private var contents: List<Content> = emptyList()
     private var currentIndex = 0
     private var isAnswerCorrect = false
+    private var isLastExplanationPage = false
+
+    private val TAG = "ContentActivity"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,21 +48,21 @@ class ContentActivity : AppCompatActivity() {
                     ContentType.MULTIPLE_CHOICE -> 2
                 }
             }
-//        if (contents.isEmpty()) {
-//            Toast.makeText(this, "Konten tidak tersedia", Toast.LENGTH_SHORT).show()
-//            finish()
-//            return
-//        }
-
         showCurrentContent()
 
         binding.btnNext.setOnClickListener {
-            val content = contents[currentIndex]
-            when (content.type) {
-                ContentType.EXPLANATION -> moveToNextPage()
-                else -> {
-                    if (isAnswerCorrect) moveToNextPage()
+            val currentContent = contents[currentIndex]
+            if (currentContent.type == ContentType.EXPLANATION) {
+                if (isLastExplanationPage) {
+                    moveToNextPage()
+                } else {
+                    val current = supportFragmentManager.findFragmentById(R.id.contentContainer)
+                    if (current is ExplanationFragment) {
+                        current.goToNextExplanationPage()
+                    }
                 }
+            } else {
+                if (isAnswerCorrect) moveToNextPage()
             }
         }
 
@@ -71,7 +74,20 @@ class ContentActivity : AppCompatActivity() {
                 showExitConfirmationDialog()
             }
         }
+
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                if (currentIndex > 0) {
+                    currentIndex--
+                    showCurrentContent()
+                } else {
+                    showExitConfirmationDialog()
+                }
+            }
+        })
     }
+
+
 
     private fun showCurrentContent() {
         val content = contents[currentIndex]
@@ -108,8 +124,6 @@ class ContentActivity : AppCompatActivity() {
         } else {
             val sectionId = intent.getStringExtra("SECTION_ID") ?: ""
             val materialId = intent.getStringExtra("MATERIAL_ID") ?: ""
-            ProgressManager.markSectionCompleted(this, sectionId)
-
             val intent = Intent(this, FinishActivity::class.java)
             intent.putExtra("SECTION_ID", sectionId)
             intent.putExtra("MATERIAL_ID", materialId)
@@ -132,6 +146,13 @@ class ContentActivity : AppCompatActivity() {
             visibility = if (showButton) View.VISIBLE else View.GONE
             this.isEnabled = isEnabled
             this.text = text
+
+            val backgroundColor = if (isEnabled) {
+                ContextCompat.getColor(context, R.color.active_button)
+            } else {
+                ContextCompat.getColor(context, R.color.disabled_button)
+            }
+            setBackgroundColor(backgroundColor)
         }
     }
 
@@ -139,8 +160,17 @@ class ContentActivity : AppCompatActivity() {
         return currentIndex == contents.size - 1
     }
 
+
     fun setAnswerCorrect(correct: Boolean) {
         isAnswerCorrect = correct
     }
-}
 
+    override fun onExplanationPageComplete(isLastPage: Boolean) {
+        isLastExplanationPage = isLastPage
+        setButtonState(
+            isEnabled = true,
+            text = if (isLastPage) if (isLastContent()) "Selesai" else "Lanjut" else "Lanjut",
+            showButton = true
+        )
+    }
+}

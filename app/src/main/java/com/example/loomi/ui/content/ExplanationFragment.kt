@@ -1,6 +1,7 @@
 package com.example.loomi.ui.content
 
 
+import android.content.Context
 import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
@@ -18,6 +19,7 @@ import com.example.loomi.databinding.FragmentExplanationBinding
 import com.example.loomi.data.model.Content
 import com.example.loomi.data.model.ExplanationChunk
 import com.example.loomi.data.model.parseChunks
+import com.example.loomi.utils.unescapeJava
 
 class ExplanationFragment : Fragment() {
 
@@ -29,6 +31,8 @@ class ExplanationFragment : Fragment() {
 
     private var _binding: FragmentExplanationBinding? = null
     private val binding get() = _binding!!
+    private var pageCompleteListener: OnExplanationPageCompleteListener? = null
+
 
     companion object {
         fun newInstance(content: Content): ExplanationFragment {
@@ -47,6 +51,7 @@ class ExplanationFragment : Fragment() {
         _binding = FragmentExplanationBinding.inflate(inflater, container, false)
         content = arguments?.getParcelable("content") ?: Content()
         explanationChunks = parseChunks(content.descriptionList)
+        pageCompleteListener = activity as? OnExplanationPageCompleteListener
 
         showNextChunkInPage()
 
@@ -92,13 +97,14 @@ class ExplanationFragment : Fragment() {
                         setBackgroundColor(ContextCompat.getColor(context, R.color.light_gray))
                         setTextColor(Color.DKGRAY)
                         setPadding(16, 16, 16, 16)
-                        text = chunk.content.formatAsCode()
+                        text = chunk.content.unescapeJava()
                     }
                     ChunkType.OUTPUT -> {
                         setTypeface(Typeface.DEFAULT_BOLD)
                         background = ContextCompat.getDrawable(context, R.drawable.bg_output)
                         setTextColor(Color.DKGRAY)
                         setPadding(16, 12, 16, 12)
+                        minHeight = 100
                     }
                 }
             }
@@ -106,34 +112,45 @@ class ExplanationFragment : Fragment() {
             binding.llExplanationContainer.addView(textView)
 
             val isLastChunk = chunkIndex == explanationChunks.size - 1
-            if (!isLastChunk) {
+            val isLastChunkInPage = currentChunkIndexInPage == chunksPerPage - 1 || isLastChunk
+            if (isLastChunkInPage) {
+                binding.tvTapToContinue.visibility = View.GONE
+                (activity as? ContentActivity)?.setButtonState(
+                    isEnabled = true,
+                    text = if (isLastChunk) "Lanjut" else "Lanjut",
+                    showButton = true
+                )
+                pageCompleteListener?.onExplanationPageComplete(isLastChunk)
+            } else {
                 binding.tvTapToContinue.visibility = View.VISIBLE
                 (activity as? ContentActivity)?.setButtonState(
                     isEnabled = false,
                     text = "Tap untuk melanjutkan",
                     showButton = false
                 )
-            } else {
-                binding.tvTapToContinue.visibility = View.GONE
-                (activity as? ContentActivity)?.setButtonState(
-                    isEnabled = true,
-                    text = if ((activity as? ContentActivity)?.isLastContent() == true) "Selesai" else "Lanjut",
-                    showButton = true
-                )
             }
+
         }
     }
 
-    fun String.formatAsCode(): String {
-        return this
-            .replace("\\n", "\n")
-            .replace("\\t", "\t")
-            .replace("\\\"", "\"")
-            .replace("\\'", "'")
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (context is OnExplanationPageCompleteListener) {
+            pageCompleteListener = context
+        }
     }
-
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
+    interface OnExplanationPageCompleteListener {
+        fun onExplanationPageComplete(isLastPage: Boolean)
+    }
+    fun goToNextExplanationPage() {
+        currentPageIndex++
+        currentChunkIndexInPage = 0
+        binding.llExplanationContainer.removeAllViews()
+        showNextChunkInPage()
+    }
+
 }
