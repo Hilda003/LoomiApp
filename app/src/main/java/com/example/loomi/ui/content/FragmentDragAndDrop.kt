@@ -1,8 +1,10 @@
 package com.example.loomi.ui.content
 
+import android.annotation.SuppressLint
 import android.content.ClipData
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.DragEvent
 import android.view.LayoutInflater
 import android.view.View
@@ -16,6 +18,7 @@ import com.example.loomi.databinding.FragmentDragAndDropBinding
 import com.example.loomi.BottomSheetResult
 import com.example.loomi.ContentActivity
 import com.example.loomi.R
+import com.example.loomi.utils.unescapeJava
 
 class DragAndDropFragment : Fragment() {
 
@@ -54,8 +57,15 @@ class DragAndDropFragment : Fragment() {
             return
         }
 
-        binding.tvQuestionText.text = content.description ?: ""
-        binding.tvQuestionText.setTextColor(Color.BLACK)
+        val code = content.code?.unescapeJava() ?: ""
+        if(code.isNotBlank()) {
+            binding.tvCode.text = content.code?.unescapeJava() ?: ""
+        } else {
+            binding.tvCode.visibility = View.GONE
+        }
+        binding.tvQuestion.text = content.question ?: ""
+        binding.tvQuestion.textSize = 16f
+        binding.tvQuestion.setTextColor(Color.BLACK)
 
         correctAnswers = content.correctAnswer.orEmpty()
 
@@ -84,6 +94,7 @@ class DragAndDropFragment : Fragment() {
             }
         }
     }
+    @SuppressLint("SetTextI18n")
     private fun createPlaceholderSlot(index: Int): TextView {
         return TextView(requireContext()).apply {
             text = "___"
