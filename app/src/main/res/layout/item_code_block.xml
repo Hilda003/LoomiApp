@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/codeBlockRoot"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/bg_code_box"
+    android:padding="12dp"
+    android:layout_margin="12dp"
+    android:layout_marginTop="16dp">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:orientation="horizontal">
+
+        <View android:layout_width="10dp" android:layout_height="10dp" android:layout_marginEnd="6dp" android:background="@drawable/circle_red" />
+        <View android:layout_width="10dp" android:layout_height="10dp" android:layout_marginEnd="6dp" android:background="@drawable/circle_yellow" />
+        <View android:layout_width="10dp" android:layout_height="10dp" android:background="@drawable/circle_green" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tvCode"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:lineSpacingExtra="4dp"
+        android:textColor="#D8DEE9"
+        android:textSize="14sp"
+        android:typeface="monospace" />
+</LinearLayout>

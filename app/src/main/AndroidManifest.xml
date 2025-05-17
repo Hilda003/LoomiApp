@@ -3,10 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -18,17 +17,20 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Loomi"
         tools:targetApi="33">
+        <receiver android:name=".notification.NotificationReceiver"
+            android:exported="true"
+            android:permission="android.permission.RECEIVE_BOOT_COMPLETED" />
         <activity
             android:name=".ui.onboarding.OnBoardingActivity"
             android:exported="false" />
         <activity
-            android:name=".FinishActivity"
+            android:name=".ui.course.material.finish.FinishActivity"
             android:exported="false" />
         <activity
-            android:name=".ContentActivity"
+            android:name=".ui.course.material.content.ContentActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.material.DetailMaterialActivity"
+            android:name=".ui.course.material.detail.DetailMaterialActivity"
             android:exported="false" />
         <activity
             android:name=".ui.article.ActivityArticle"

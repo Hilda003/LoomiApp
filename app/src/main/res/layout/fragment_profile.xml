@@ -84,6 +84,7 @@
                     android:textSize="14sp" />
 
                 <TextView
+                    android:id="@+id/txt_completed"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="10 hours"
@@ -120,6 +121,7 @@
                     android:textSize="14sp" />
 
                 <TextView
+                    android:id="@+id/txt_time_spent"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="10 hours"
@@ -229,7 +231,7 @@
                     android:layout_marginTop="4dp"
                     android:layout_marginBottom="4dp"
                     android:layout_gravity="center"
-                    android:id="@+id/notification"
+                    android:id="@+id/switch_notification"
                     tools:ignore="UseSwitchCompatOrMaterialXml" />
             </LinearLayout>
 

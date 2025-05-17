@@ -1,34 +1,29 @@
 package com.example.loomi.ui.profile
 
-import android.content.Context
+import android.app.TimePickerDialog
 import android.content.Intent
-import android.content.SharedPreferences
-import android.graphics.Bitmap
-import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.Paint
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import com.bumptech.glide.Glide
+import androidx.lifecycle.ViewModelProvider
 import com.example.loomi.R
 import com.example.loomi.databinding.DialogLanguageBinding
 import com.example.loomi.databinding.FragmentProfileBinding
 import com.example.loomi.ui.auth.LoginActivity
 import com.example.loomi.utils.LocaleHelper
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
+import java.util.*
 
 class ProfileFragment : Fragment() {
-
-    private lateinit var auth: FirebaseAuth
-    private lateinit var sharedPreferences: SharedPreferences
     private var _binding: FragmentProfileBinding? = null
     private val binding get() = _binding!!
+    private lateinit var viewModel: ProfileViewModel
+    private lateinit var auth: FirebaseAuth
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -36,96 +31,90 @@ class ProfileFragment : Fragment() {
     ): View {
         _binding = FragmentProfileBinding.inflate(inflater, container, false)
         auth = FirebaseAuth.getInstance()
-        sharedPreferences = requireContext().getSharedPreferences("settings", Context.MODE_PRIVATE)
+        val userUid = auth.currentUser?.uid.orEmpty()
 
-        setupLanguageToggle()
-        setupLogoutButton()
-        displayUserInfo()
+        viewModel = ViewModelProvider(this, ProfileViewModelFactory(requireContext(), userUid))
+            .get(ProfileViewModel::class.java)
 
+        requestNotificationPermissionIfNeeded()
+        observeViewModel()
+        setupUI()
+
+        binding.switchNightMode.setOnClickListener {
+            Toast.makeText(requireContext(), "Fitur masih dalam tahap pengembangan", Toast.LENGTH_SHORT).show()
+        }
         return binding.root
+
     }
 
-    private fun displayUserInfo() {
-        val user = auth.currentUser
-        if (user != null) {
-            user.reload().addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    // Optional: show layout group if hidden
-                    binding.txtUsername.text = user.displayName ?: "No Name"
-                    binding.txtEmail.text = user.email ?: "No Email"
-                    loadProfileImage(user)
-                } else {
-                    Toast.makeText(requireContext(), "Gagal memuat data user", Toast.LENGTH_SHORT).show()
-                }
+    private fun observeViewModel() {
+        viewModel.user.observe(viewLifecycleOwner) { user ->
+            binding.txtUsername.text = user.displayName ?: "No Name"
+            binding.txtEmail.text = user.email ?: "No Email"
+            viewModel.loadProfileImage(this, user, binding.ivProfile)
+        }
+
+        viewModel.notifEnabled.observe(viewLifecycleOwner) { enabled ->
+            if (binding.switchNotification.isChecked != enabled) {
+                binding.switchNotification.setOnCheckedChangeListener(null)
+                binding.switchNotification.isChecked = enabled
+                binding.switchNotification.setOnCheckedChangeListener(notificationSwitchListener)
             }
-        } else {
-            startActivity(Intent(requireContext(), LoginActivity::class.java))
-            requireActivity().finish()
         }
     }
 
-    private fun loadProfileImage(user: FirebaseUser) {
-        val photoUrl = user.photoUrl
-        if (photoUrl != null) {
-            Glide.with(this)
-                .load(photoUrl)
-                .placeholder(R.drawable.circle_background)
-                .into(binding.ivProfile)
-        } else {
-            val email = user.email.orEmpty()
-            val initial = email.firstOrNull()?.uppercase() ?: "?"
-            binding.ivProfile.setImageBitmap(generateInitialBitmap(initial))
-        }
-    }
+    private fun setupUI() {
+        viewModel.fetchUser()
 
-    private fun generateInitialBitmap(initial: String): Bitmap {
-        val size = 200
-        val bitmap = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888)
-        val canvas = Canvas(bitmap)
-
-        val paintCircle = Paint().apply {
-            color = Color.LTGRAY
-            isAntiAlias = true
-        }
-
-        val paintText = Paint().apply {
-            color = Color.WHITE
-            textSize = 80f
-            isAntiAlias = true
-            textAlign = Paint.Align.CENTER
-        }
-
-        canvas.drawCircle(size / 2f, size / 2f, size / 2f, paintCircle)
-        val yPos = (canvas.height / 2 - (paintText.descent() + paintText.ascent()) / 2)
-        canvas.drawText(initial, size / 2f, yPos, paintText)
-
-        return bitmap
-    }
-
-    private fun setupLogoutButton() {
         binding.btnLogout.setOnClickListener {
-            auth.signOut()
+            viewModel.logout()
             startActivity(Intent(requireContext(), LoginActivity::class.java))
             requireActivity().finish()
         }
-    }
 
-    private fun setupLanguageToggle() {
         binding.btnLanguage.setOnClickListener {
             showLanguageDialog()
         }
+        binding.switchNotification.setOnCheckedChangeListener(notificationSwitchListener)
+    }
+
+    private val notificationSwitchListener =
+        { _: android.widget.CompoundButton, isChecked: Boolean ->
+            viewModel.toggleNotification(isChecked)
+            if (isChecked) {
+                showTimePickerDialog()
+            } else {
+                Toast.makeText(requireContext(), "Reminder dimatikan", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+    private fun showTimePickerDialog() {
+        val calendar = Calendar.getInstance()
+        val hour = calendar.get(Calendar.HOUR_OF_DAY)
+        val minute = calendar.get(Calendar.MINUTE)
+
+        val timePicker = TimePickerDialog(requireContext(), { _, selectedHour, selectedMinute ->
+            viewModel.setNotificationTime(selectedHour, selectedMinute)
+            Toast.makeText(
+                requireContext(),
+                "Reminder di-set jam $selectedHour:$selectedMinute",
+                Toast.LENGTH_SHORT
+            ).show()
+        }, hour, minute, true)
+
+        timePicker.show()
     }
 
     private fun showLanguageDialog() {
         val dialogBinding = DialogLanguageBinding.inflate(LayoutInflater.from(requireContext()))
-        val currentLang = sharedPreferences.getString("app_lang", "en")
+        val currentLang = viewModel.language.value ?: "en"
 
         when (currentLang) {
             "en" -> dialogBinding.radioEnglish.isChecked = true
             "id" -> dialogBinding.radioIndonesian.isChecked = true
         }
 
-        val dialog = AlertDialog.Builder(requireContext())
+        AlertDialog.Builder(requireContext())
             .setView(dialogBinding.root)
             .setPositiveButton("OK") { _, _ ->
                 val selectedLang = when (dialogBinding.radioGroupLanguage.checkedRadioButtonId) {
@@ -133,8 +122,7 @@ class ProfileFragment : Fragment() {
                     R.id.radioIndonesian -> "id"
                     else -> "en"
                 }
-
-                sharedPreferences.edit().putString("app_lang", selectedLang).apply()
+                viewModel.setLanguage(selectedLang)
                 val context = LocaleHelper.setLocale(requireContext(), selectedLang)
                 val intent = Intent(context, requireActivity()::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
@@ -143,8 +131,22 @@ class ProfileFragment : Fragment() {
             }
             .setNegativeButton("Cancel", null)
             .create()
+            .show()
+    }
 
-        dialog.show()
+    private fun requestNotificationPermissionIfNeeded() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(
+                    requireContext(),
+                    android.Manifest.permission.POST_NOTIFICATIONS
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                requestPermissions(
+                    arrayOf(android.Manifest.permission.POST_NOTIFICATIONS),
+                    1001
+                )
+            }
+        }
     }
 
     override fun onDestroyView() {
