@@ -108,8 +108,8 @@ class FinishActivity : AppCompatActivity() {
     }
 
     private fun animationConfetti() {
-        binding.viewKonfetti.post {
-            val konfetti = binding.viewKonfetti
+        binding.viewConfetti.post {
+            val konfetti = binding.viewConfetti
             val width = konfetti.width.toFloat()
             val height = konfetti.height.toFloat()
             val startY = height * 0.4f

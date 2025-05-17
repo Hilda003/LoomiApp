@@ -92,6 +92,9 @@ dependencies {
 //    circle imageview
     implementation(libs.circleimageview)
 
+//    konfetti
+    implementation(libs.konfetti)
+
 //    retrofit
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
