@@ -1,7 +1,10 @@
-package com.example.loomi
+package com.example.loomi.ui.course.material.content
 
 import android.content.Intent
+import android.media.MediaPlayer
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.View
 import android.widget.Toast
@@ -10,25 +13,28 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.example.loomi.R
 import com.example.loomi.data.model.Content
 import com.example.loomi.data.model.ContentType
 import com.example.loomi.databinding.ActivityContentBinding
-import com.example.loomi.ui.content.DragAndDropFragment
-import com.example.loomi.ui.content.ExplanationFragment
-import com.example.loomi.ui.content.ExplanationFragment.OnExplanationPageCompleteListener
-import com.example.loomi.ui.content.MultipleChoiceFragment
+import com.example.loomi.ui.course.material.content.detailContent.DragAndDropFragment
+import com.example.loomi.ui.course.material.content.detailContent.ExplanationFragment
+import com.example.loomi.ui.course.material.content.detailContent.MultipleChoiceFragment
+import com.example.loomi.ui.course.material.finish.FinishActivity
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import kotlin.jvm.java
 
-class ContentActivity : AppCompatActivity(), ExplanationFragment.OnExplanationPageCompleteListener  {
+class ContentActivity : AppCompatActivity(), ExplanationFragment.OnExplanationPageCompleteListener {
 
     internal lateinit var binding: ActivityContentBinding
     private var contents: List<Content> = emptyList()
     private var currentIndex = 0
     private var isAnswerCorrect = false
     private var isLastExplanationPage = false
+    private var mediaPlayer: MediaPlayer? = null
+    private var isSoundEnabled = true
 
     private val TAG = "ContentActivity"
+    private val handler = Handler(Looper.getMainLooper())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,6 +57,8 @@ class ContentActivity : AppCompatActivity(), ExplanationFragment.OnExplanationPa
         showCurrentContent()
 
         binding.btnNext.setOnClickListener {
+            Log.d(TAG, "Next button clicked - current content type: ${contents[currentIndex].type}")
+
             val currentContent = contents[currentIndex]
             if (currentContent.type == ContentType.EXPLANATION) {
                 if (isLastExplanationPage) {
@@ -62,8 +70,19 @@ class ContentActivity : AppCompatActivity(), ExplanationFragment.OnExplanationPa
                     }
                 }
             } else {
-                if (isAnswerCorrect) moveToNextPage()
+                // For DRAG_AND_DROP or MULTIPLE_CHOICE
+                Log.d(TAG, "Non-explanation content, isAnswerCorrect: $isAnswerCorrect")
+                if (isAnswerCorrect) {
+                    handler.postDelayed({
+                        moveToNextPage()
+                    }, 500)
+                }
             }
+        }
+
+        binding.icVolume.setOnClickListener {
+            isSoundEnabled = !isSoundEnabled
+            updateVolumeIcon()
         }
 
         binding.icBack.setOnClickListener {
@@ -85,18 +104,17 @@ class ContentActivity : AppCompatActivity(), ExplanationFragment.OnExplanationPa
                 }
             }
         })
+        updateVolumeIcon()
     }
-
-
 
     private fun showCurrentContent() {
         val content = contents[currentIndex]
         binding.tvContentTitle.text = content.title
 
         val fragment = when (content.type) {
-            ContentType.EXPLANATION -> ExplanationFragment.newInstance(content)
-            ContentType.DRAG_AND_DROP -> DragAndDropFragment.newInstance(content)
-            ContentType.MULTIPLE_CHOICE -> MultipleChoiceFragment.newInstance(content)
+            ContentType.EXPLANATION -> ExplanationFragment.Companion.newInstance(content)
+            ContentType.DRAG_AND_DROP -> DragAndDropFragment.Companion.newInstance(content)
+            ContentType.MULTIPLE_CHOICE -> MultipleChoiceFragment.Companion.newInstance(content)
         }
 
         supportFragmentManager.beginTransaction()
@@ -127,8 +145,16 @@ class ContentActivity : AppCompatActivity(), ExplanationFragment.OnExplanationPa
             val intent = Intent(this, FinishActivity::class.java)
             intent.putExtra("SECTION_ID", sectionId)
             intent.putExtra("MATERIAL_ID", materialId)
+            intent.putExtra("CURRENT_TITLE", contents[currentIndex].title)
+            val nextTitle = if (currentIndex + 1 < contents.size) {
+                contents[currentIndex + 1].title
+            } else {
+                null
+            }
+            intent.putExtra("NEXT_TITLE", nextTitle)
             startActivity(intent)
             finish()
+
         }
     }
 
@@ -160,9 +186,15 @@ class ContentActivity : AppCompatActivity(), ExplanationFragment.OnExplanationPa
         return currentIndex == contents.size - 1
     }
 
-
     fun setAnswerCorrect(correct: Boolean) {
         isAnswerCorrect = correct
+        playFeedbackSound(correct)
+
+        setButtonState(
+            isEnabled = true,
+            text = if (isLastContent()) "Selesai" else "Lanjut",
+            showButton = true
+        )
     }
 
     override fun onExplanationPageComplete(isLastPage: Boolean) {
@@ -172,5 +204,54 @@ class ContentActivity : AppCompatActivity(), ExplanationFragment.OnExplanationPa
             text = if (isLastPage) if (isLastContent()) "Selesai" else "Lanjut" else "Lanjut",
             showButton = true
         )
+    }
+    private fun playFeedbackSound(correct: Boolean) {
+        if (!isSoundEnabled) {
+
+            return
+        }
+
+        val soundResId = if (correct) R.raw.correct_sound else R.raw.incorrect_sound
+
+        try {
+            mediaPlayer?.release()
+            mediaPlayer = null
+            mediaPlayer = MediaPlayer.create(applicationContext, soundResId)
+            if (mediaPlayer == null) {
+                Toast.makeText(this, "Gagal memutar suara", Toast.LENGTH_SHORT).show()
+                return
+            }
+            mediaPlayer?.setOnCompletionListener {
+                it.release()
+                mediaPlayer = null
+            }
+            Log.d(TAG, "Starting MediaPlayer")
+            mediaPlayer?.start()
+
+        } catch (e: Exception) {
+            Log.e(TAG, "Error playing sound", e)
+            Toast.makeText(this, "Terjadi error saat memutar suara", Toast.LENGTH_SHORT).show()
+        }
+    }
+    fun playSoundIfEnabled(soundResId: Int) {
+        if (!isSoundEnabled) return
+
+        val sound = MediaPlayer.create(this, soundResId)
+        sound?.apply {
+            setOnCompletionListener { it.release() }
+            start()
+        }
+    }
+
+
+    private fun updateVolumeIcon() {
+        val iconRes = if (isSoundEnabled) R.drawable.ic_volume else R.drawable.ic_volume_off
+        binding.icVolume.setImageResource(iconRes)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mediaPlayer?.release()
+        mediaPlayer = null
     }
 }

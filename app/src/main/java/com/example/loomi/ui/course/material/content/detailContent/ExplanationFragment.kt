@@ -1,9 +1,10 @@
-package com.example.loomi.ui.content
+package com.example.loomi.ui.course.material.content.detailContent
 
 
 import android.content.Context
 import android.graphics.Color
 import android.graphics.Typeface
+import android.media.SoundPool
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,7 +13,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import com.example.loomi.ContentActivity
+import com.example.loomi.ui.course.material.content.ContentActivity
 import com.example.loomi.R
 import com.example.loomi.data.model.ChunkType
 import com.example.loomi.databinding.FragmentExplanationBinding
@@ -28,11 +29,11 @@ class ExplanationFragment : Fragment() {
     private var currentPageIndex = 0
     private var currentChunkIndexInPage = 0
     private val chunksPerPage = 4
-
+    private lateinit var soundPool: SoundPool
+    private var clickSoundId: Int = 0
     private var _binding: FragmentExplanationBinding? = null
     private val binding get() = _binding!!
     private var pageCompleteListener: OnExplanationPageCompleteListener? = null
-
 
     companion object {
         fun newInstance(content: Content): ExplanationFragment {
@@ -52,10 +53,14 @@ class ExplanationFragment : Fragment() {
         content = arguments?.getParcelable("content") ?: Content()
         explanationChunks = parseChunks(content.descriptionList)
         pageCompleteListener = activity as? OnExplanationPageCompleteListener
+        soundPool = SoundPool.Builder().setMaxStreams(1).build()
+        clickSoundId = soundPool.load(requireContext(), R.raw.click, 1)
+
 
         showNextChunkInPage()
 
         binding.tvTapToContinue.setOnClickListener {
+            (activity as? ContentActivity)?.playSoundIfEnabled(R.raw.click)
             val totalChunksShown = currentPageIndex * chunksPerPage + currentChunkIndexInPage + 1
             if (totalChunksShown < explanationChunks.size) {
                 if (currentChunkIndexInPage < chunksPerPage - 1) {
@@ -141,6 +146,7 @@ class ExplanationFragment : Fragment() {
     }
     override fun onDestroyView() {
         super.onDestroyView()
+        soundPool.release()
         _binding = null
     }
     interface OnExplanationPageCompleteListener {
@@ -152,5 +158,4 @@ class ExplanationFragment : Fragment() {
         binding.llExplanationContainer.removeAllViews()
         showNextChunkInPage()
     }
-
 }

@@ -1,4 +1,4 @@
-package com.example.loomi.ui.content
+package com.example.loomi.ui.course.material.content.detailContent
 
 import android.graphics.Color
 import android.os.Bundle
@@ -7,10 +7,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.RadioButton
 import androidx.fragment.app.Fragment
-import com.example.loomi.ContentActivity
+import com.example.loomi.ui.course.material.content.ContentActivity
 import com.example.loomi.data.model.Content
 import com.example.loomi.databinding.FragmentMultipleChoiceBinding
-import com.example.loomi.BottomSheetResult
+import com.example.loomi.utils.BottomSheetResult
 import com.example.loomi.R
 import com.example.loomi.utils.unescapeJava
 
@@ -62,6 +62,7 @@ class MultipleChoiceFragment : Fragment() {
         binding.rgChoices.setOnCheckedChangeListener { group, checkedId ->
             val selectedRadioButton = group.findViewById<RadioButton>(checkedId)
             selectedAnswer = selectedRadioButton?.text.toString()
+            (activity as? ContentActivity)?.playSoundIfEnabled(R.raw.click)
             (activity as? ContentActivity)?.setButtonState(true, "Cek Hasil")
         }
 
@@ -89,6 +90,7 @@ class MultipleChoiceFragment : Fragment() {
             bottomSheet.show(parentFragmentManager, "BottomSheetResult")
 
         } else {
+            (activity as? ContentActivity)?.setAnswerCorrect(false)
             val bottomSheet = BottomSheetResult.newInstance(false)
             bottomSheet.show(parentFragmentManager, "BottomSheetResult")
         }

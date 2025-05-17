@@ -1,4 +1,4 @@
-package com.example.loomi.ui.content
+package com.example.loomi.ui.course.material.content.detailContent
 
 import android.os.Bundle
 import android.text.method.LinkMovementMethod
@@ -24,7 +24,6 @@ class DescriptionFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        // Set the title and description for the Kotlin Fundamental material
 
         binding.tvDescription.text = HtmlCompat.fromHtml(
             getString(R.string.description_kotlin_fundamental),
