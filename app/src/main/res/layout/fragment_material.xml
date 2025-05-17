@@ -6,7 +6,7 @@
     android:padding="16dp"
     android:background="@color/white"
     android:fitsSystemWindows="true"
-    tools:context=".ui.material.MaterialFragment"
+    tools:context=".ui.course.material.material.MaterialFragment"
     >
 
     <androidx.recyclerview.widget.RecyclerView

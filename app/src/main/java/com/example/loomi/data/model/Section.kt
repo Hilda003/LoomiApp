@@ -9,7 +9,7 @@ import java.util.UUID
 @IgnoreExtraProperties
 @Parcelize
 data class Section(
-    val docId: String = "",
+    var docId: String = "",
     val order: Int = 0,
     val title: String = "",
     val content : List<Content> = emptyList(),

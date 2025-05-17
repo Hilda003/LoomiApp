@@ -6,7 +6,7 @@
     android:orientation="vertical"
     android:background="@color/white"
     android:padding="24dp"
-    tools:context=".BottomSheetResult">
+    tools:context=".utils.BottomSheetResult">
     <View
         android:layout_width="60dp"
         android:layout_height="4dp"

@@ -1,10 +1,10 @@
-package com.example.loomi
+package com.example.loomi.utils
 
 import android.os.Bundle
-
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.example.loomi.R
 import com.example.loomi.databinding.FragmentBottomSheetResultBinding
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
@@ -34,7 +34,7 @@ class BottomSheetResult : BottomSheetDialogFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         isCancelable = false
-        isSuccess = arguments?.getBoolean(ARG_IS_SUCCESS) ?: false
+        isSuccess = arguments?.getBoolean(ARG_IS_SUCCESS) == true
     }
 
     override fun onCreateView(
@@ -51,7 +51,7 @@ class BottomSheetResult : BottomSheetDialogFragment() {
         with(binding) {
             if (isSuccess) {
                 tvTitle.text = "Yeay, benar!"
-                ivStatusIcon.setImageResource(R.drawable.ic_close)
+                ivStatusIcon.setImageResource(R.drawable.ic_correct)
             } else {
                 tvTitle.text = "Oops, masih salah"
                 ivStatusIcon.setImageResource(R.drawable.ic_close)

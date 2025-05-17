@@ -1,105 +1,132 @@
 package com.example.loomi.ui.home
 
-import android.R.attr.text
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.startActivity
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.example.loomi.R
-import com.example.loomi.ui.article.ActivityArticle
 import com.example.loomi.databinding.FragmentHomeBinding
-import com.example.loomi.data.model.Course
-import com.example.loomi.data.retrofit.ApiConfig
-import com.example.loomi.databinding.ItemMaterialBinding
+import com.example.loomi.ui.article.ActivityArticle
 import com.example.loomi.ui.auth.LoginActivity
 import com.google.firebase.auth.FirebaseAuth
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import kotlin.jvm.java
+
 
 class HomeFragment : Fragment() {
 
-
     private var _binding: FragmentHomeBinding? = null
-    private lateinit var auth: FirebaseAuth
     private val binding get() = _binding!!
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
+    private lateinit var auth: FirebaseAuth
+    private lateinit var viewModel: HomeViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
-
         auth = FirebaseAuth.getInstance()
-        displayUserInfo()
+        viewModel = ViewModelProvider(this)[HomeViewModel::class.java]
         return binding.root
-        ItemMaterialBinding.inflate(inflater, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         view.setBackgroundColor(Color.WHITE)
 
-        val course = Course(
-            title = "Algoritma Dasar",
-            instructor = "Ronal",
-            lessonCount = 9,
-            progress = 87,
-        )
-        binding.itemCourse.tvCourseTitle.text = course.title
-        binding.itemCourse.tvCompletion.text = course.instructor
+        displayUserInfo()
+        val userId = auth.currentUser?.uid
 
-        val apiService = ApiConfig.getApiService()
+        if (userId != null) {
+            viewModel.fetchOverallProgress(userId)
 
-        viewLifecycleOwner.lifecycleScope.launch {
-            try {
-                val articles = withContext(Dispatchers.IO) {
-                    apiService.getArticles()
+        }
+
+        viewModel.fetchLatestArticle()
+
+        observeViewModel()
+        binding.notification.setOnClickListener {
+            Toast(requireContext()).apply {
+                setText("Fitur masih dalam tahap pengembangan")
+
+                show()
+            }
+        }
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun observeViewModel() {
+        viewModel.overallProgress.observe(viewLifecycleOwner) { progressInfo ->
+            val progressBar = binding.progressBar2
+            val progressText = binding.textProgressPercentage
+            val circularProgress = binding.progressBar2
+
+            if (progressInfo != null) {
+                val (completed, total, percentage) = progressInfo
+                progressBar.progress = percentage
+                progressText.text = "$completed of $total"
+
+                circularProgress.apply {
+                    visibility = View.VISIBLE
+                    max = 100
+                    progress = percentage
                 }
 
-                if (!isAdded) return@launch
+                progressBar.progressTintList = ContextCompat.getColorStateList(
+                    requireContext(),
+                    R.color.green
+                )
 
-                val latestArticle = articles.firstOrNull()
-                latestArticle?.let { article ->
-                    binding.itemArticle.tvTitleArticle.text = article.title
-                    Glide.with(this@HomeFragment)
-                        .load(article.coverImage)
-                        .into(binding.itemArticle.courseImg)
-
-                    binding.tvSeeAll.setOnClickListener {
-                        val intent = Intent(requireContext(), ActivityArticle::class.java)
-                        startActivity(intent)
-                    }
+                if (percentage > 0) {
+                    binding.textView14.text = getString(R.string.your_progress_is_amazing)
+                    binding.textView15.text = getString(
+                        R.string.keep_up_the_good_work)
+                } else {
+                    binding.textView14.text = "Belum ada progres"
+                    binding.textView15.text = "Yuk mulai belajar dari awal!"
                 }
-            } catch (e: Exception) {
-                if (isAdded) {
-                    Toast.makeText(
-                        requireContext(),
-                        "Gagal load artikel: ${e.message}",
-                        Toast.LENGTH_SHORT
-                    ).show()
+
+                Log.d("HomeFragment", "Progress: $completed/$total sections = $percentage%")
+            }
+        }
+
+        viewModel.latestArticle.observe(viewLifecycleOwner) { article ->
+            if (article != null) {
+                binding.itemArticle.tvTitleArticle.text = article.title
+                Glide.with(this)
+                    .load(article.coverImage)
+                    .into(binding.itemArticle.courseImg)
+                binding.tvSeeAll.setOnClickListener {
+                    startActivity(Intent(requireContext(), ActivityArticle::class.java))
                 }
             }
         }
     }
+
     private fun displayUserInfo() {
         val user = auth.currentUser
         if (user != null) {
             binding.txtName.text = user.displayName ?: "No Name"
         } else {
-//            Toast.makeText(requireContext(), "User not logged in", Toast.LENGTH_SHORT).show()
             startActivity(Intent(requireContext(), LoginActivity::class.java))
             requireActivity().finish()
         }
+    }
+
+
+
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

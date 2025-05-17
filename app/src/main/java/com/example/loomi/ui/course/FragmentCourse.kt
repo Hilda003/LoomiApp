@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import com.example.loomi.R
@@ -49,6 +50,7 @@ class FragmentCourse : Fragment() {
             val tab = binding.tabLayout.getTabAt(i)
             val tabTextView = TextView(requireContext()).apply {
                 text = tab?.text
+                setTextColor(ContextCompat.getColor(context, R.color.white))
                 typeface = font
                 gravity = Gravity.CENTER
                 layoutParams = LinearLayout.LayoutParams(
@@ -57,6 +59,9 @@ class FragmentCourse : Fragment() {
                 )
             }
             tab?.customView = tabTextView
+        }
+        binding.ivBack.setOnClickListener {
+            requireActivity().onBackPressed()
         }
 
 

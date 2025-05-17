@@ -1,4 +1,4 @@
-package com.example.loomi.ui.material
+package com.example.loomi.ui.course.material.material
 
 import android.util.Log
 import androidx.lifecycle.LiveData
@@ -8,10 +8,9 @@ import com.example.loomi.data.model.Content
 import com.example.loomi.data.model.ContentType
 import com.example.loomi.data.model.Material
 import com.example.loomi.data.model.Section
-import com.example.loomi.data.model.UserProgress
 import com.google.android.gms.tasks.Tasks
-import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlin.collections.get
 
 class MaterialViewModel : ViewModel() {
 
@@ -63,7 +62,6 @@ class MaterialViewModel : ViewModel() {
                 }
             }
             .addOnFailureListener {
-                Log.e("MaterialViewModel", "Failed to load materials", it)
             }
     }
 
@@ -77,8 +75,6 @@ class MaterialViewModel : ViewModel() {
                     val raw = sectionDoc.data
                     val order = (raw["order"] as? Long)?.toInt() ?: 0
                     val title = raw["title"] as? String ?: ""
-//                    val isLocked = raw["isLocked"] as? Boolean ?: true
-//                    val isCompleted = raw["isCompleted"] as? Boolean ?: false
 
                     db.collection("materials")
                         .document(materialId)
@@ -94,8 +90,6 @@ class MaterialViewModel : ViewModel() {
                             Section(
                                 order = order,
                                 title = title,
-//                                isLocked = isLocked,
-//                                isCompleted = isCompleted,
                                 content = contentList,
                                 docId = sectionDoc.id
                             )
@@ -118,7 +112,7 @@ class MaterialViewModel : ViewModel() {
     }
     private fun parseContent(raw: Map<String, Any>): Content? {
         val typeStr = raw["type"] as? String ?: return null
-        val type = ContentType.fromString(typeStr)
+        val type = ContentType.Companion.fromString(typeStr)
         val title = raw["title"] as? String ?: ""
 
         return when (type) {
@@ -153,7 +147,8 @@ class MaterialViewModel : ViewModel() {
                 Content(
                     type = type,
                     title = title,
-                    description = dataMap["text"] as? String ?: "",
+                    question = dataMap["question"] as? String ?: "",
+                    code = dataMap["code"] as? String,
                     choices = dataMap["drag"] as? List<String>,
                     correctAnswer = (dataMap["correctAnswer"] as? List<*>)?.mapNotNull { it?.toString() }
                 )
@@ -161,4 +156,3 @@ class MaterialViewModel : ViewModel() {
         }
     }
 }
-

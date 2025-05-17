@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="22dp"
-    tools:context=".ui.content.MultipleChoiceFragment">
+    tools:context=".ui.course.material.content.detailContent.MultipleChoiceFragment">
 
     <LinearLayout
         android:layout_width="match_parent"

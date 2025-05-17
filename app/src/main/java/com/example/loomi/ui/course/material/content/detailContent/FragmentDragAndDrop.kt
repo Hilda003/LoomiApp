@@ -1,10 +1,9 @@
-package com.example.loomi.ui.content
+package com.example.loomi.ui.course.material.content.detailContent
 
 import android.annotation.SuppressLint
 import android.content.ClipData
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.DragEvent
 import android.view.LayoutInflater
 import android.view.View
@@ -15,8 +14,8 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import com.example.loomi.data.model.Content
 import com.example.loomi.databinding.FragmentDragAndDropBinding
-import com.example.loomi.BottomSheetResult
-import com.example.loomi.ContentActivity
+import com.example.loomi.utils.BottomSheetResult
+import com.example.loomi.ui.course.material.content.ContentActivity
 import com.example.loomi.R
 import com.example.loomi.utils.unescapeJava
 
@@ -186,6 +185,7 @@ class DragAndDropFragment : Fragment() {
             bottomSheet.show(parentFragmentManager, "BottomSheetResult")
 
         } else {
+            (activity as? ContentActivity)?.setAnswerCorrect(false)
             val bottomSheet = BottomSheetResult.newInstance(false)
             bottomSheet.show(parentFragmentManager, "BottomSheetResult")
         }

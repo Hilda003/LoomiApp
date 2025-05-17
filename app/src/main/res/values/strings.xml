@@ -15,11 +15,11 @@
     <string name="agree_with_terms_and_conditions"><![CDATA[Menyetujui syarat dan ketentuan]]></string>
     <string name="name">Nama</string>
     <string name="hallo">👋 Hallo,</string>
-    <string name="great_to_see_you_again">Great to see you again!</string>
+    <string name="great_to_see_you_again">Selamat datang kembali!</string>
     <string name="txt_title_articles">Data structures and Algorithms are used in Android’s Architecture and Components</string>
     <string name="search_material">Search material</string>
-    <string name="your_progress_is_amazing">Your progress is amazing!</string>
-    <string name="keep_up_the_good_work">Keep up the good work</string>
+    <string name="your_progress_is_amazing">Progres kamu sangat bagus!</string>
+    <string name="keep_up_the_good_work">Tetap semangat!</string>
     <string name="continue_studying">Lanjut Belajar</string>
     <string name="night_mode">Night mode</string>
     <string name="john_doe">John Doe</string>
@@ -57,17 +57,7 @@
         ornare ex. Sed rhoncus est ut libero porta lobortis. Fusce in dictum tellus.\n\n
         Suspendisse interdum ornare ante. Aliquam nec cursus lorem. Morbi id magna felis. Vivamus
         egestas, est a condimentum egestas, turpis nisl iaculis ipsum, in dictum tellus dolor sed
-        neque. Morbi tellus erat, dapibus ut sem a, iaculis tincidunt dui. Interdum et malesuada
-        fames ac ante ipsum primis in faucibus. Curabitur et eros porttitor, ultricies urna vitae,
-        molestie nibh. Phasellus at commodo eros, non aliquet metus. Sed maximus nisl nec dolor
-        bibendum, vel congue leo egestas.\n\n
-        Sed interdum tortor nibh, in sagittis risus mollis quis. Curabitur mi odio, condimentum sit
-        amet auctor at, mollis non turpis. Nullam pretium libero vestibulum, finibus orci vel,
-        molestie quam. Fusce blandit tincidunt nulla, quis sollicitudin libero facilisis et. Integer
-        interdum nunc ligula, et fermentum metus hendrerit id. Vestibulum lectus felis, dictum at
-        lacinia sit amet, tristique id quam. Cras eu consequat dui. Suspendisse sodales nunc ligula,
-        in lobortis sem porta sed. Integer id ultrices magna, in luctus elit. Sed a pellentesque
-        est.\n\n
+        neque.
     </string>
     <string name="val_a_5_nval_b_10_nif_a_b">val a = 5\nval b = 10\nif ( ___ a ___ b )</string>
     <string name="finish">Selesai!</string>
@@ -100,5 +90,8 @@
     <string name="skip">Lompati</string>
     <string name="_4_10">4/10</string>
     <string name="tap_to_continue">Tap untuk melanjutkan</string>
+    <string name="no_continue_material">Tidak ada materi selanjutnya</string>
+    <string name="failed_to_load_content">Gagal memuat konten</string>
+    <string name="failed_to_load_material">Materi saat ini tidak ditemukan</string>
 
 </resources>
