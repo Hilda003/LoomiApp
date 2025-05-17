@@ -8,7 +8,7 @@
     android:padding="16dp"
     android:background="@color/white"
     android:forceDarkAllowed="false"
-    tools:context=".ui.material.DetailMaterialActivity">
+    tools:context=".ui.course.material.detail.DetailMaterialActivity">
 
 
     <ImageView

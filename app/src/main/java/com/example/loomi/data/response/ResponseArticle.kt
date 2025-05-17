@@ -68,7 +68,7 @@ data class ResponseArticleItem(
 	val id: Int,
 
 	@field:SerializedName("cover_image")
-	val coverImage: Any,
+	val coverImage: Any?,
 
 	@field:SerializedName("published_at")
 	val publishedAt: String,
