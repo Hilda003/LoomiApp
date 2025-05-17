@@ -8,10 +8,10 @@
     android:background="@color/white"
     android:padding="25dp"
     android:fitsSystemWindows="true"
-    tools:context=".ui.material.DetailMaterialActivity">
+    tools:context=".ui.course.material.detail.DetailMaterialActivity">
 
     <ImageView
-        android:id="@+id/btnBack"
+        android:id="@+id/ic_back"
         android:layout_width="28dp"
         android:layout_height="28dp"
         android:src="@drawable/ic_arrow_back"
@@ -20,29 +20,60 @@
         app:layout_constraintStart_toStartOf="parent"
         app:tint="@color/black" />
 
-
-    <ImageView
-        android:id="@+id/imgBanner"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardBanner"
         android:layout_width="match_parent"
         android:layout_height="180dp"
-        android:contentDescription="@string/kotlin_fundamental"
-        android:scaleType="fitCenter"
-        android:background="@drawable/rounded_bg"
-        app:layout_constraintTop_toBottomOf="@id/btnBack"
+        android:layout_marginTop="16dp"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="4dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintTop_toBottomOf="@id/ic_back"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp" />
+        app:layout_constraintEnd_toEndOf="parent">
 
-    <TextView
-        android:id="@+id/tvTitle"
+        <ImageView
+            android:id="@+id/imgBanner"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/kotlin_fundamental"
+            android:scaleType="centerCrop"
+            android:src="@drawable/article1" />
+
+    </androidx.cardview.widget.CardView>
+
+    <LinearLayout
+        android:id="@+id/layoutTitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="@string/kotlin_fundamental"
-        style="@style/PoppinsBold"
-        app:layout_constraintTop_toBottomOf="@id/imgBanner"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginTop="24dp"
+        app:layout_constraintTop_toBottomOf="@id/cardBanner"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="24dp"/>
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <TextView
+            android:id="@+id/tvTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/kotlin_fundamental"
+            style="@style/PoppinsBold"
+            android:textSize="20sp"
+            android:textColor="@color/black" />
+
+        <ImageView
+            android:id="@+id/ic_favorite"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:src="@drawable/ic_favorite"
+            android:padding="4dp"
+            android:clickable="true"
+            android:focusable="true"
+            app:tint="@color/dark_green" />
+    </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvMaterials"
@@ -53,7 +84,7 @@
         android:layout_marginTop="30dp"
         android:scrollbars="vertical"
         tools:listitem="@layout/item_section"
-        app:layout_constraintTop_toBottomOf="@id/tvTitle"
+        app:layout_constraintTop_toBottomOf="@id/layoutTitle"
         app:layout_constraintStart_toStartOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
