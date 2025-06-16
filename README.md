@@ -10,10 +10,10 @@ Loomi is an efficient and optimized learning platform to help users learn easier
 
 
 ## Demo
-- Register dan Login Screen
 ![Register dan Login Screen](https://github.com/user-attachments/assets/ebb75290-c0f3-42ab-afe6-017cd5855892)\
 ![Home Screen](https://github.com/user-attachments/assets/a49bdecc-1464-4edc-8829-d84393a242b9)\
 ![Home Screen](https://github.com/user-attachments/assets/24e8847f-493e-4620-befc-159283c2988a)\
+Link full design: https://bit.ly/Design-App-Loomi
 
 ## Tech Stack
 
